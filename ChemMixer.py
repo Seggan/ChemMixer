@@ -15,7 +15,6 @@ for n in chemdict:
 print('''ChemMixer 2.2.0
 
 What's new:
-bug fix
 That's all.\n''')
 print('''Welcome to ChemMixer, a chemistry lab simulator.
 Let's get started.''')
