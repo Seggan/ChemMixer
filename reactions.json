@@ -113,4 +113,29 @@
 			"reactants":["water","ammonia"],
 			"temp max":37,
 			"temp min":-273,
-			"results":["hypochlorous acid"]}}
+			"results":["hypochlorous acid"]},
+	"al+hcl":{
+			"reactants":["hydrochloric acid","aluminum"],
+			"temp max":3500,
+			"temp min":-44,
+			"results":["aluminum chloride"]},
+	"al(cl)3+h2o":{
+			"reactants":["water","aluminum chloride"],
+			"temp max":3500,
+			"temp min":-1,
+			"results":["aluminum hydroxide","hydrochloric acid"]},
+	"al(oh)3+h2so4":{
+			"reactants":["sulfuric acid","aluminum hydroxide"],
+			"temp max":3500,
+			"temp min":9,
+			"results":["aluminum sulfate"]},
+	"al+h2o2":{
+			"reactants":["hydrogen peroxide","aluminum"],
+			"temp max":3500,
+			"temp min":-1,
+			"results":["aluminum oxide","water"]},
+	"al2(so4)3":{
+			"reactants":["aluminum sulfate"],
+			"temp max":3500,
+			"temp min":800,
+			"results":["aluminum","sulfuric acid"]}}
