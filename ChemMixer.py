@@ -67,7 +67,7 @@ while True:
         sleep(1)
         print("Programmer: Daniel K.")
         sleep(1)
-        print("Testers: Lianna K., Irina K., Daniel K.")
+        print("Testers: Lianna K., Irina K., Daniel K., Drew Drew us")
         sleep(1)
         exit()
     elif cmd=="5":
