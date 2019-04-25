@@ -15,7 +15,8 @@ What's new:
 fixed some bugs,
 added discovery mode,
 added aluminum derivatives,
-added more reactions
+added more reactions,
+added credits to Drew Drew us
 That's all.\n''')
 print('''Welcome to ChemMixer, a chemistry lab simulator.
 Let's get started.''')
