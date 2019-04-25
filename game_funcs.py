@@ -3,8 +3,8 @@ def codify(text):
     fi=fi.strip()
     fi=fi.lower()
     return fi
-class Beaker():
-    """A class to represent a beaker for the game"""
+class CreativeBeaker():
+    """A class to represent a beaker for creative mode"""
     def __init__(self):
         from json import load
         self.chemicals=list()
@@ -49,7 +49,12 @@ class Beaker():
 following chemicals inside:''')
         for chemical in self.chemicals:
             print(chemdict[chemical]["state"],chemical)
-
+class DiscoveryBeaker(CreativeBeaker):
+    def __init__(self):
+        super().__init__()
+        self.discovered_chemicals=["oxygen","hydrogen","nitrogen","helium",
+                                   "sulfur","aluminum","lithium","chlorine"
+                                   ]
 def change_states(temp,chemdict):
     for chem in chemdict.keys():
         if temp>chemdict[chem]["melting_point"]:

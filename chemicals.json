@@ -2,7 +2,7 @@
 "hydrogen":{
 			"melting_point":-259,
 			"boiling_point":-252,
-            		"state":"gaseous"},
+            "state":"gaseous"},
 "oxygen":{
 		"melting_point":-218,
 		"boiling_point":-183,
@@ -76,8 +76,8 @@
 				"boiling_point":-10,
 				"state":"gaseous"},
 "lithium":{	"melting_point":180,
-		"boiling_point":1330,
-            	"state":"gaseous"},
-"aluminum":{	"melting_point":660,
-		"boiling_point":2470,
-            	"state":"gaseous"}}
+			"boiling_point":1330,
+            "state":"gaseous"},
+"aluminum":{"melting_point":660,
+			"boiling_point":2470,
+			"state":"gaseous"}}
