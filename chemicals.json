@@ -42,7 +42,7 @@
 "hydrochloric acid":{
 					"melting_point":-43,
 					"boiling_point":84,
-				    	"state":"liquid"},
+				    "state":"liquid"},
 "ammonium chloride":{
 					"melting_point":338,
 					"boiling_point":520,
@@ -75,9 +75,21 @@
 				"melting_point":-72,
 				"boiling_point":-10,
 				"state":"gaseous"},
-"lithium":{	"melting_point":180,
+"lithium":{"melting_point":180,
 			"boiling_point":1330,
-            "state":"gaseous"},
+			"state":"solid"},
 "aluminum":{"melting_point":660,
 			"boiling_point":2470,
-			"state":"gaseous"}}
+			"state":"solid"},
+"aluminum chloride":{"melting_point":100,
+					"boiling_point":180,
+					"state":"solid"},
+"aluminum hydroxide":{"melting_point":300,
+					"boiling_point":4000,
+					"state":"solid"},
+"aluminum oxide":{"melting_point":2072,
+				"boiling_point":2977,
+				"state":"solid"},
+"aluminum sulfate":{"melting_point":770,
+				"boiling_point":4000,
+				"state":"solid"}}

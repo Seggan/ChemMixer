@@ -12,6 +12,10 @@ temperature=19
 print('''ChemMixer 2.2.0
 
 What's new:
+fixed some bugs,
+added discovery mode,
+added aluminum derivatives,
+added more reactions
 That's all.\n''')
 print('''Welcome to ChemMixer, a chemistry lab simulator.
 Let's get started.''')
