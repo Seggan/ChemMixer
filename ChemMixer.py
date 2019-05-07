@@ -9,7 +9,7 @@ discovery_beaker=DiscoveryBeaker()
 with open("chemicals.json",'r') as c:
     chemdict=load(c)
 temperature=19
-print('''ChemMixer 2.2.0
+print('''ChemMixer 3.3.0
 
 What's new:
 fixed some bugs,
