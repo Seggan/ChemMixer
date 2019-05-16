@@ -183,12 +183,32 @@ struct json_chemical_file
 	char id;
 };
 
+struct json_react_file
+{
+	char react_name[255];
+	char reactants[255];
+	char result[255];
+	short max_temp;
+	short min_temp;
+};
+
+char u;
+char k;
+char gh_check;
+
 /*Data (around 4 kb)*/
 char jcfs_data_chem_name[32][255];
 short jcfs_data_melting_point[32];
 short jcfs_data_boiling_point[32];
 char jcfs_data_state_name[32][255];
 short jcfs_data_mass[32];
+
+/*React Data (other 4kb!)*/
+char jrfs_data_react_name[32][255];
+char jrfs_data_reactants[32][32];
+char jrfs_data_result[32][32];
+short jrfs_data_max_temp[32];
+short jrfs_data_min_temp[32];
 
 char page_number;
 
@@ -198,6 +218,7 @@ short jcfs_use_amount[32];
 /*After this goes the structures*/
 
 struct json_chemical_file holder;
+struct json_react_file holder2;
 
 char check_for(char check)
 {
@@ -318,6 +339,150 @@ char parse_chemical_json(const char* json_chemical_filename)
 		jcfs_data_boiling_point[t] = holder.boiling_point;
 		memccpy(jcfs_data_state_name[t],holder.state_name,holder.state_name,strlen(holder.state_name)+1);
 		jcfs_data_mass[t] = holder.mass;
+	}
+	return 1;
+}
+
+char parse_reaction_json(const char* json_chemical_filename)
+{
+	int ch_piec;
+	int o;
+	int t = 0;
+	fp = fopen(json_chemical_filename,"r");
+	if(!fp)
+	{
+		printf("Cant open file %s!",json_chemical_filename);
+		/*Return Error Code 0*/
+		return 0;
+	}
+	for(t = 0; t < NUM_CHEMICALS; t++)
+	{
+		/*Seek for the reaction name*/
+		ch_piec = check_for('"');
+		if(ch_piec == 1)
+		{
+			for(o = 0;o < 255;o++)
+			{
+				if(ch_piec == 1)
+				{
+					holder2.react_name[o] = fgetc(fp);
+					if(holder2.react_name[o] == '"')
+					{
+						/*Set ch_piec to 0, so we dont write anything else*/
+						/*Plus remove the " from it, so its clean*/
+						holder2.react_name[o] = 0;
+						ch_piec = 0;
+						break;
+					}
+				}
+			}
+		}
+		/*Be sure to skip the : character!*/
+		ch_piec = check_for(':');
+		/*Finaly, lets seek out the reactants
+		 *or components, btw*/
+		ch_piec = check_for(':');
+		ch_piec = check_for('[');
+		ch_piec = check_for('"');
+		while(ch_piec == 1)
+		{
+			gh_check = 0;
+			for(o = 0;o < 255;o++)
+			{
+				if(ch_piec == 1)
+				{
+					printf("Reactants: %s",holder2.reactants);
+					holder2.reactants[o] = fgetc(fp);
+					if(holder2.reactants[o] == '"')
+					{
+						holder.reactants[o] = 0;
+						k = 0;
+						u = 5;
+						while(u != 0)
+						{
+							u = strcmp(holder2.reactants,jcfs_data_chem_name[k]);
+							k++;
+						}
+						/*
+						Set number in the array map*/
+						jrfs_data_reactants[t][gh_check] = k;
+						gh_check++;
+					}
+					if(holder2.reactants[o] == ']')
+					{
+						ch_piec = 0;
+						break;
+					}
+				}
+			}
+		}
+		/*Max Temperature*/
+		printf("max temp");
+		ch_piec = check_for('"');
+		ch_piec = check_for(':');
+		if(ch_piec == 1)
+		{
+			fscanf(fp,"%d",&holder2.max_temp);
+		}
+		/*Min Temperature*/
+		printf("min temp");
+		ch_piec = check_for('"');
+		ch_piec = check_for(':');
+		if(ch_piec == 1)
+		{
+			fscanf(fp,"%d",&holder2.max_temp);
+		}
+		/*Result*/
+		printf("result");
+		ch_piec = check_for(':');
+		ch_piec = check_for('[');
+		ch_piec = check_for('"');
+		while(ch_piec == 1)
+		{
+			gh_check = 0;
+			for(o = 0;o < 255;o++)
+			{
+				if(ch_piec == 1)
+				{
+					holder2.result[o] = fgetc(fp);
+					if(holder2.result[o] == '"')
+					{
+						holder.result[o] = 0;
+						k = 0;
+						u = 5;
+						while(u != 0)
+						{
+							u = strcmp(holder2.result,jcfs_data_chem_name[k]);
+							k++;
+						}
+						/*
+						Set number in the array map*/
+						jrfs_data_result[t][gh_check] = k;
+						gh_check++;
+					}
+					if(holder2.reactants[o] == ']')
+					{
+						ch_piec = 0;
+						break;
+					}
+				}
+			}
+		}
+		printf("copying");
+		memccpy(jrfs_data_react_name[t],holder2.react_name,holder2.react_name,strlen(holder2.react_name)+1);
+		jrfs_data_max_temp[t] = holder2.max_temp;
+		jrfs_data_min_temp[t] = holder2.min_temp;
+		gotoxy(0,8+t);
+		printf("\xBA %d",holder2.result);
+		gotoxy(30,8+t);
+		printf("\xBA %s",holder2.react_name);
+		gotoxy(40,8+t);
+		printf("\xBA %d",holder2.max_temp);
+		gotoxy(70,8+t);
+		printf("\xBA %d",holder2.min_temp);
+		gotoxy(80,8+t);
+		printf("\xBA");
+		gotoxy(0,8+t);
 	}
 	return 1;
 }
@@ -472,7 +637,7 @@ int main()
 				printf("\xBA");
 				if(jcfs_use_amount[y+1] > 0)
 				{
-					printf(" (%d) %s",jcfs_use_amount[y],jcfs_data_chem_name[y+1]);
+					printf(" (%d) %s",jcfs_use_amount[y+1],jcfs_data_chem_name[y+1]);
 				}
 				gotoxy(79,8+(y/2));
 				printf(" \xBA");
@@ -510,6 +675,10 @@ int main()
 			gotoxy(79,9);
 			printf(" \xBA");
 		}
+		if(select_mode == 3)
+		{
+			parse_reaction_json("REACT.JSO");
+		}
 		/*
 		gotoxy(0,17);
 		print_line_of('\xCC','\xCD','\xB9');
@@ -536,6 +705,11 @@ int main()
 			{
 				set_video_to_text();
 				return 0;
+			}
+			/*Debug*/
+			if(menu_select == 'D'||menu_select == 'd')
+			{
+				select_mode = 3;
 			}
 		}
 		if(select_mode == 1)
