@@ -2,22 +2,35 @@ from game_funcs import *
 from json import load
 from tkinter import *
 class GUI(Frame):
-    def __init__(self, master, names):
+    def __init__(self, master, names, temp, chem):
         super().__init__(master)
         self.master=master
-        self.init_widgets(names)
-    def init_widgets(self, names):
+        self.init_widgets(names, temp, chem)
+    def init_widgets(self, names, temp, chem):
         self.menubar=Menu(self.master)
         self.add=Menu(self.menubar)
         for name in names:
-            self.add.add_checkbutton(label=name, command=lambda n=name:b.add(n))
-        self.menubar.add_cascade(label="add", menu=self.add)
+            self.add.add_command(label=name, command=lambda n=name:beaker.add(n))
+        self.menubar.add_cascade(label="Add", menu=self.add)
         root.config(menu=self.menubar)
+        self.text=beaker.show_contents(temp, chem)
+        self.contents=Label(self.master, text=self.text)
+        self.contents.pack(side=TOP)
+    def update_contents(self, temp, chem):
+        self.text=beaker.show_contents(temp, chem)
+        self.contents.config(text=self.text)
+        self.contents.pack(side=TOP)
 with open("chemicals.json",'r') as r:
     chemdict=load(r)
-b=CreativeBeaker()
+temperature=20
+beaker=CreativeBeaker()
 root=Tk()
 root.geometry("1000x700")
 root.title("ChemMixer 4.0.0")
-gui=GUI(root,[name for name in chemdict.keys()])
-root.mainloop()
+gui=GUI(root,[name for name in chemdict.keys()], temperature, chemdict)
+while True:
+    gui.update_contents(temperature, chemdict)
+    try:
+        root.update()
+    except:
+        exit()

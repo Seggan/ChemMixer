@@ -38,12 +38,13 @@ class CreativeBeaker():
                 for d in self.reactions[a]["results"]:
                     self.add(d,chemdict)
                 print("\nA reaction has occurred.")
-    def contents(self,temp,chemdict):
+    def show_contents(self,temp,chemdict):
         """Shows the contents of the beaker"""
-        print("\nYour beaker is at ",temp,''' degrees Celsius and has the
-following chemicals inside:''')
+        txt="Your beaker is at "+str(temp)+''' degrees Celsius and has the
+following chemicals inside:'''
         for chemical in self.contents:
-            print(chemdict[chemical]["state"],chemical)
+            txt+='\n'+chemdict[chemical]["state"]+' '+chemical
+        return txt
 class DiscoveryBeaker(CreativeBeaker):
     def __init__(self):
         super().__init__()
