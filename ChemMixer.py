@@ -1,5 +1,6 @@
 from game_funcs import *
 from json import load
+import sys
 from tkinter import *
 class GUI(Frame):
     def __init__(self, master, names, temp, chem):
@@ -29,8 +30,8 @@ root.geometry("1000x700")
 root.title("ChemMixer 4.0.0")
 gui=GUI(root,[name for name in chemdict.keys()], temperature, chemdict)
 while True:
-    gui.update_contents(temperature, chemdict)
     try:
+        gui.update_contents(temperature, chemdict)
         root.update()
     except:
-        exit()
+        sys.exit()
