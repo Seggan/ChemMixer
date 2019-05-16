@@ -1,3 +1,4 @@
+from tkinter import *
 def codify(text):
     fi=text
     fi=fi.strip()
@@ -7,24 +8,18 @@ class CreativeBeaker():
     """A class to represent a beaker for creative mode"""
     def __init__(self):
         from json import load
-        self.chemicals=list()
-        reactions=dict()
+        self.contents=list()
+        self.reactions=dict()
         with open("reactions.json",'r') as r:
             self.reactions=load(r)
         self.cont=False
-    def add(self,chemical,chemdict):
+    def add(self,chemical):
         """Adds a chemical"""
-        if codify(chemical) in chemdict.keys():
-            self.chemicals.append(codify(chemical))
-        else:
-            self.cont=True
+        self.contents.append(codify(chemical))
     def extract(self,chemi):
         """Removes a chemical"""
         if chemi:
-            if chemi in self.chemicals:
-                self.chemicals.remove(chemi)
-            else:
-                self.cont=True
+            self.contents.remove(chemi)
         else:
             print("\n\tSorry, but there is nothing to remove.\n")
     def reset(self):
@@ -36,7 +31,7 @@ class CreativeBeaker():
         tmp=0
         for a in self.reactions.keys():
             s1=set(self.reactions[a]["reactants"])
-            s2=set(self.chemicals)
+            s2=set(self.contents)
             if s1.issubset(s2) and (temp>self.reactions[a]["temp min"] and temp<=self.reactions[a]["temp max"]):
                 for c in self.reactions[a]["reactants"]:
                     self.extract(c)
@@ -47,7 +42,7 @@ class CreativeBeaker():
         """Shows the contents of the beaker"""
         print("\nYour beaker is at ",temp,''' degrees Celsius and has the
 following chemicals inside:''')
-        for chemical in self.chemicals:
+        for chemical in self.contents:
             print(chemdict[chemical]["state"],chemical)
 class DiscoveryBeaker(CreativeBeaker):
     def __init__(self):
@@ -65,10 +60,3 @@ def change_states(temp,chemdict):
             chemdict[chem]["state"]="liquid"
         if temp<=chemdict[chem]["melting_point"]:
             chemdict[chem]["state"]="solid"
-        
-        
-                  
-    
-        
-    
-            
