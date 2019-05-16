@@ -190,6 +190,8 @@ short jcfs_data_boiling_point[32];
 char jcfs_data_state_name[32][255];
 short jcfs_data_mass[32];
 
+char page_number;
+
 /*Get the total amount of chemicals per ID*/
 short jcfs_use_amount[32];
 
@@ -354,6 +356,8 @@ int main()
 {
 	char select_mode = 0;
 	char y,x;
+	char menu_check;
+	char menu_cc;
 	int o;
 	char selection = 0;
 	/*Now make a list of the chemicals and also
@@ -373,7 +377,7 @@ int main()
 		set_text_color_fullscreen(0x1F);
 		gotoxy(0,0);
 		print_line_of('\xC9','\xCD','\xBB');
-		printf("\xBA Chemixer 3.0");
+		printf("\xBA Chemixer 0.1.2");
 		gotoxy(79,2);
 		printf(" \xBA");
 		print_line_of('\xBA',' ','\xBA');
@@ -405,9 +409,9 @@ int main()
 		{
 			printf("\xBA (E)xit");
 		}
-		if(cursor_pos.x > 3)
+		if(cursor_pos.x > 1)
 		{
-			cursor_pos.x = 3;
+			cursor_pos.x = 1;
 		}
 		if(cursor_pos.x < 0)
 		{
@@ -431,11 +435,7 @@ int main()
 		if(select_mode == 1||select_mode == 0)
 		{
 			print_line_of('\xCC','\xCD','\xB9');
-			gotoxy(20,7);
-			printf("\xCB");
 			gotoxy(40,7);
-			printf("\xCB");
-			gotoxy(60,7);
 			printf("\xCB");
 			gotoxy(80,7);
 			printf("\xB9");
@@ -445,8 +445,13 @@ int main()
 			print_line_of('\xCC','\xCD','\xB9');
 		}
 		/*8th and upper lines*/
-		gotoxy(0,8);
 		/*
+		gotoxy(0,30);
+		print_line_of('\xCC','\xCD','\xB9');
+		print_line_of('\xAE','\xB1','\xAF');
+		print_line_of('\xCC','\xCD','\xB9');
+		gotoxy(0,8);
+
 		getch();
 		set_video_to_graphic();
 		printf("Chemical 1: XYZ\nComposition: XYZ\nState of Matter: XYZ\nPercentage in beaker by mass: XYZ\n");
@@ -455,50 +460,44 @@ int main()
 		*/
 		if(select_mode == 0)
 		{
-			for(y = 0; y < NUM_CHEMICALS; y += 3)
+			for(y = 0; y < NUM_CHEMICALS; y += 2)
 			{
-				gotoxy(0,8+(y/4));
-				printf("\xBA (%d) ",jcfs_use_amount[y]);
-				printf("%s",jcfs_data_chem_name[y]);
-				gotoxy(20,8+(y/4));
-				printf("\xBA (%d) ",jcfs_use_amount[y+1]);
-				printf("%s",jcfs_data_chem_name[y+1]);
-				gotoxy(40,8+(y/4));
-				printf("\xBA (%d) ",jcfs_use_amount[y+2]);
-				printf("%s",jcfs_data_chem_name[y+2]);
-				gotoxy(60,8+(y/4));
-				printf("\xBA (%d) ",jcfs_use_amount[y+3]);
-				printf("%s",jcfs_data_chem_name[y+3]);
-				gotoxy(79,8+(y/4));
+				gotoxy(0,8+(y/2));
+				printf("\xBA");
+				if(jcfs_use_amount[y] > 0)
+				{
+					printf(" (%d) %s",jcfs_use_amount[y],jcfs_data_chem_name[y]);
+				}
+				gotoxy(40,8+(y/2));
+				printf("\xBA");
+				if(jcfs_use_amount[y+1] > 0)
+				{
+					printf(" (%d) %s",jcfs_use_amount[y],jcfs_data_chem_name[y+1]);
+				}
+				gotoxy(79,8+(y/2));
 				printf(" \xBA");
 			}
 		}
 		if(select_mode == 1)
 		{
-			for(y = 0; y < NUM_CHEMICALS; y += 3)
+			for(y = 0; y < NUM_CHEMICALS; y += 2)
 			{
-				gotoxy(0,8+(y/4));
+				gotoxy(0,8+(y/2));
 				printf("\xBA %s",jcfs_data_chem_name[y]);
-				gotoxy(20,8+(y/4));
+				gotoxy(40,8+(y/2));
 				printf("\xBA %s",jcfs_data_chem_name[y+1]);
-				gotoxy(40,8+(y/4));
-				printf("\xBA %s",jcfs_data_chem_name[y+2]);
-				gotoxy(60,8+(y/4));
-				printf("\xBA %s",jcfs_data_chem_name[y+3]);
-				gotoxy(79,8+(y/4));
+				gotoxy(79,8+(y/2));
 				printf(" \xBA");
 			}
 			if(cursor_pos.x <= 0)
 			{
-				gotoxy(cursor_pos.x*20+3,cursor_pos.y+8);
+				gotoxy(cursor_pos.x*40+3,cursor_pos.y+8);
 			}
 			else
 			{
-				gotoxy(cursor_pos.x*20+2,cursor_pos.y+8);
+				gotoxy(cursor_pos.x*40+2,cursor_pos.y+8);
 			}
 			printf("\xDB");
-			gotoxy(3,25);
-			printf("%d %d",cursor_pos.x,cursor_pos.y);
 		}
 		if(select_mode == 2)
 		{
@@ -511,6 +510,14 @@ int main()
 			gotoxy(79,9);
 			printf(" \xBA");
 		}
+		/*
+		gotoxy(0,17);
+		print_line_of('\xCC','\xCD','\xB9');
+		gotoxy(0,18);
+		printf("\xBA Page (%d/20)",page_number);
+		gotoxy(80,19);
+		printf("\xBA");
+		*/
 		menu_select = getch();
 		/*Select Mode*/
 		if(select_mode == 0)
@@ -539,13 +546,10 @@ int main()
 				select_mode = 0;
 			}
 			/*Arrow keys*/
-			if(d < 0)
+			if(menu_select == KEY_ENTER)
 			{
-				d = 0;
-			}
-			if(d > NUM_CHEMICALS)
-			{
-				d = NUM_CHEMICALS;
+				jcfs_use_amount[cursor_pos.y*2+cursor_pos.x]++;
+				select_mode = 0;
 			}
 		}
 		if(select_mode == 2)
