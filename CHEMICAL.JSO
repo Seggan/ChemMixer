@@ -1,0 +1,152 @@
+{
+    "hydrogen": {
+        "melting_point": -259,
+        "boiling_point": -252,
+        "state": "gaseous",
+		"mass":2
+    },
+    "oxygen": {
+        "melting_point": -218,
+        "boiling_point": -183,
+        "state": "gaseous",
+		"mass":32
+    },
+    "water": {
+        "melting_point": 0,
+        "boiling_point": 100,
+        "state": "liquid",
+		"mass":18
+    },
+    "ozone": {
+        "melting_point": -192,
+        "boiling_point": -112,
+        "state": "gaseous",
+		"mass":48
+    },
+    "hydrogen peroxide": {
+        "melting_point": 0,
+        "boiling_point": 150,
+        "state": "liquid",
+		"mass":34
+    },
+    "nitrogen": {
+        "melting_point": -210,
+        "boiling_point": -196,
+        "state": "gaseous",
+		"mass":28
+    },
+    "ammonia": {
+        "melting_point": -78,
+        "boiling_point": -33,
+        "state": "gaseous",
+		"mass":17
+    },
+    "ammonium hydroxide": {
+        "melting_point": -58,
+        "boiling_point": 38,
+        "state": "liquid",
+		"mass":34
+    },
+    "helium": {
+        "melting_point": -272,
+        "boiling_point": -269,
+        "state": "gaseous",
+		"mass":4
+    },
+    "dihelium": {
+        "melting_point": -272,
+        "boiling_point": -269,
+        "state": "gaseous",
+		"mass":8
+    },
+    "hydrochloric acid": {
+        "melting_point": -43,
+        "boiling_point": 84,
+        "state": "liquid",
+		"mass":36
+    },
+    "ammonium chloride": {
+        "melting_point": 338,
+        "boiling_point": 520,
+        "state": "solid",
+		"mass":53
+    },
+    "hypochlorous acid": {
+        "melting_point": 0,
+        "boiling_point": 100,
+        "state": "liquid",
+		"mass":52
+    },
+    "chlorine": {
+        "melting_point": -101,
+        "boiling_point": -34,
+        "state": "gaseous",
+		"mass":70
+    },
+    "chloramine": {
+        "melting_point": -66,
+        "boiling_point": 0,
+        "state": "gaseous",
+		"mass":51
+    },
+    "sulfuric acid": {
+        "melting_point": 10,
+        "boiling_point": 337,
+        "state": "liquid",
+		"mass":98
+    },
+    "ammonium sulfate": {
+        "melting_point": 230,
+        "boiling_point": 250,
+        "state": "solid",
+		"mass":132
+    },
+    "sulfur": {
+        "melting_point": 115,
+        "boiling_point": 444,
+        "state": "solid",
+		"mass":256
+    },
+    "sulfur dioxide": {
+        "melting_point": -72,
+        "boiling_point": -10,
+        "state": "gaseous",
+		"mass":64
+    },
+    "lithium": {
+        "melting_point": 180,
+        "boiling_point": 1330,
+        "state": "solid",
+		"mass":7
+    },
+    "aluminum": {
+        "melting_point": 660,
+        "boiling_point": 2470,
+        "state": "solid",
+		"mass":27
+    },
+    "aluminum chloride": {
+        "melting_point": 100,
+        "boiling_point": 180,
+        "state": "solid",
+		"mass":133
+    },
+    "aluminum hydroxide": {
+        "melting_point": 300,
+        "boiling_point": 4000,
+        "state": "solid",
+		"mass":78
+    },
+    "aluminum oxide": {
+        "melting_point": 2072,
+        "boiling_point": 2977,
+        "state": "solid",
+		"mass":102
+    },
+    "aluminum sulfate": {
+        "melting_point": 770,
+        "boiling_point": 4000,
+        "state": "solid",
+		"mass":342
+    }
+}
