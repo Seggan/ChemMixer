@@ -29,6 +29,7 @@ root=Tk()
 root.geometry("1000x700")
 root.title("ChemMixer 4.0.0")
 gui=GUI(root,[name for name in chemdict.keys()], temperature, chemdict)
+# A try-except for stopping the
 while True:
     try:
         gui.update_contents(temperature, chemdict)
