@@ -345,6 +345,7 @@ char parse_chemical_json(const char* json_chemical_filename)
 
 char parse_reaction_json(const char* json_chemical_filename)
 {
+	char another = 0;
 	int ch_piec;
 	int o;
 	int t = 0;
@@ -384,31 +385,153 @@ char parse_reaction_json(const char* json_chemical_filename)
 		ch_piec = check_for(':');
 		ch_piec = check_for('[');
 		ch_piec = check_for('"');
+		/*
 		while(ch_piec == 1)
 		{
+			repeat_check:
 			gh_check = 0;
 			for(o = 0;o < 255;o++)
 			{
 				if(ch_piec == 1)
 				{
-					printf("Reactants: %s",holder2.reactants);
 					holder2.reactants[o] = fgetc(fp);
 					if(holder2.reactants[o] == '"')
 					{
-						holder.reactants[o] = 0;
-						k = 0;
-						u = 5;
-						while(u != 0)
-						{
-							u = strcmp(holder2.reactants,jcfs_data_chem_name[k]);
-							k++;
-						}
-						/*
-						Set number in the array map*/
-						jrfs_data_reactants[t][gh_check] = k;
-						gh_check++;
+						break;
 					}
 					if(holder2.reactants[o] == ']')
+					{
+						ch_piec = 0;
+						break;
+					}
+				}
+				k = o;
+			}
+			if(holder2.reactants[k] == '"')
+			{
+				holder2.reactants[o] = 0;
+				if(fgetc(fp) == ',')
+				{
+					another = 1;
+				}
+				k = 0;
+				u = 5;
+				while(u != 0)
+				{
+					u = strcmp(holder2.reactants,jcfs_data_chem_name[k]);
+					k++;
+				}
+				jrfs_data_reactants[t][gh_check] = k;
+				gh_check++;
+			}
+			if(another == 1)
+			{
+				another = 0;
+				goto repeat_check;
+			}
+		}
+		*/
+		/*
+		gh_check = 0;
+		while(ch_piec == 1)
+		{
+			repeat_check:
+			for(o = 0;o < 255;o++)
+			{
+				if(ch_piec == 1)
+				{
+					holder2.reactants[o] = fgetc(fp);
+					if(holder2.reactants[o] == ',')
+					{
+						o++;
+						holder2.reactants[o] = fgetc(fp);
+						if(holder2.reactants[o] != ']'&&holder2.reactants[o] != '}')
+						{
+							for(k = 0; k < 255; k++)
+							{
+								holder2.reactants[k] = fgetc(fp);
+								if(holder2.reactants[k] == '"')
+								{
+									holder2.reactants[k] = 0;
+									goto ss_skip_line;
+								}
+								printf("ARG 2 %s",jcfs_data_chem_name[holder2.reactants[k]]);
+								getch();
+							}
+							ss_skip_line:
+							memccpy(jrfs_data_reactants[t][gh_check],holder2.reactants,holder2.reactants,strlen(holder2.reactants)+1);
+						}
+						else
+						{
+							ch_piec = 0;
+							/*Exit this, and the other loop, now next arg*
+							o = 255;
+							break;
+						}
+					}
+					if(holder2.reactants[o] == '"')
+					{
+						/*Delete the double comma from the string*
+						holder2.reactants[o] = 0;
+						for(k = 0; k < NUM_CHEMICALS; k++)
+						{
+							if(strcmp(holder2.reactants,jcfs_data_chem_name[k]) == 0)
+							{
+								gotoxy(0,8+t);
+								printf("(%s)",holder2.reactants);
+								printf("%s ID: %d",jcfs_data_chem_name[k],k);
+								getch();
+							}
+						}
+					}
+					if(holder2.reactants[o] == ']'||holder2.reactants[o] == '}')
+					{
+						ch_piec = 0;
+						/*Exit this, and the other loop, now next arg*
+						o = 255;
+						break;
+					}
+				}
+			}
+			gh_check++;
+		}
+		*/
+		while(ch_piec == 1)
+		{
+			/*GH_CHECK
+			 * 1 = quote end
+			 * 0 = quote start
+			 * */
+			gh_check = 1;
+			repeat_check:
+			for(o = 0;o < 255;o++)
+			{
+				if(ch_piec == 1)
+				{
+					holder2.reactants[o] = fgetc(fp);
+					if(holder2.reactants[o] == '"'&&gh_check == 1)
+					{
+						holder2.reactants[o] = 0;
+						memccpy(jrfs_data_reactants[t][gh_check],holder2.reactants,holder2.reactants,strlen(holder2.reactants)+1);
+						gh_check = 0;
+						break;
+					}
+					if(holder2.reactants[o] == '"'&&gh_check == 0)
+					{
+						for(k = 0;k < 255;k++)
+						{
+							holder2.reactants[o] = fgetc(fp);
+							if(holder2.reactants[o] == '"')
+							{
+								holder2.reactants[o] = 0;
+								memccpy(jrfs_data_reactants[t][gh_check],holder2.reactants,holder2.reactants,strlen(holder2.reactants)+1);
+								gh_check = 1;
+								break;
+							}
+						}
+						goto repeat_check;
+					}
+					if(holder2.reactants[o] == ']'||holder2.reactants[o] == '}')
 					{
 						ch_piec = 0;
 						break;
@@ -417,7 +540,6 @@ char parse_reaction_json(const char* json_chemical_filename)
 			}
 		}
 		/*Max Temperature*/
-		printf("max temp");
 		ch_piec = check_for('"');
 		ch_piec = check_for(':');
 		if(ch_piec == 1)
@@ -425,7 +547,6 @@ char parse_reaction_json(const char* json_chemical_filename)
 			fscanf(fp,"%d",&holder2.max_temp);
 		}
 		/*Min Temperature*/
-		printf("min temp");
 		ch_piec = check_for('"');
 		ch_piec = check_for(':');
 		if(ch_piec == 1)
@@ -433,34 +554,45 @@ char parse_reaction_json(const char* json_chemical_filename)
 			fscanf(fp,"%d",&holder2.max_temp);
 		}
 		/*Result*/
-		printf("result");
 		ch_piec = check_for(':');
 		ch_piec = check_for('[');
 		ch_piec = check_for('"');
 		while(ch_piec == 1)
 		{
-			gh_check = 0;
+			/*GH_CHECK
+			 * 1 = quote end
+			 * 0 = quote start
+			 * */
+			gh_check = 1;
+			repeat_check_2:
 			for(o = 0;o < 255;o++)
 			{
 				if(ch_piec == 1)
 				{
 					holder2.result[o] = fgetc(fp);
-					if(holder2.result[o] == '"')
+					if(holder2.result[o] == '"'&&gh_check == 1)
 					{
-						holder.result[o] = 0;
-						k = 0;
-						u = 5;
-						while(u != 0)
-						{
-							u = strcmp(holder2.result,jcfs_data_chem_name[k]);
-							k++;
-						}
-						/*
-						Set number in the array map*/
-						jrfs_data_result[t][gh_check] = k;
-						gh_check++;
+						holder2.result[o] = 0;
+						memccpy(jrfs_data_result[t][gh_check],holder2.result,holder2.result,strlen(holder2.result)+1);
+						gh_check = 0;
+						break;
 					}
-					if(holder2.reactants[o] == ']')
+					if(holder2.result[o] == '"'&&gh_check == 0)
+					{
+						for(k = 0;k < 255;k++)
+						{
+							holder2.result[o] = fgetc(fp);
+							if(holder2.result[o] == '"')
+							{
+								holder2.result[o] = 0;
+								memccpy(jrfs_data_result[t][gh_check],holder2.result,holder2.result,strlen(holder2.result)+1);
+								gh_check = 1;
+								break;
+							}
+						}
+						goto repeat_check_2;
+					}
+					if(holder2.result[o] == ']'||holder2.result[o] == '}')
 					{
 						ch_piec = 0;
 						break;
@@ -468,21 +600,24 @@ char parse_reaction_json(const char* json_chemical_filename)
 				}
 			}
 		}
-		printf("copying");
 		memccpy(jrfs_data_react_name[t],holder2.react_name,holder2.react_name,strlen(holder2.react_name)+1);
 		jrfs_data_max_temp[t] = holder2.max_temp;
 		jrfs_data_min_temp[t] = holder2.min_temp;
+		
 		gotoxy(0,8+t);
-		printf("\xBA %d",holder2.result);
-		gotoxy(30,8+t);
-		printf("\xBA %s",holder2.react_name);
-		gotoxy(40,8+t);
-		printf("\xBA %d",holder2.max_temp);
-		gotoxy(70,8+t);
-		printf("\xBA %d",holder2.min_temp);
-		gotoxy(80,8+t);
+		printf("\xBA NAME: %s",jrfs_data_react_name[t]);
+		gotoxy(0,9+t);
+		printf("\xBA ReID: %s",jcfs_data_chem_name[jrfs_data_result[t][0]]);
+		gotoxy(0,10+t);
+		printf("\xBA RaID: %s",jcfs_data_chem_name[jrfs_data_reactants[t][0]]);
+		gotoxy(0,11+t);
+		printf("\xBA MTEMP: %d",jrfs_data_max_temp[t]);
+		gotoxy(0,12+t);
+		printf("\xBA MTEMP: %d",jrfs_data_min_temp[t]);
+		gotoxy(0,13+t);
 		printf("\xBA");
-		gotoxy(0,8+t);
+		gotoxy(0,14+t);
+		getch();
 	}
 	return 1;
 }
@@ -727,6 +862,14 @@ int main()
 			}
 		}
 		if(select_mode == 2)
+		{
+			/*Exit*/
+			if(menu_select == 'E'||menu_select == 'e')
+			{
+				select_mode = 0;
+			}
+		}
+		if(select_mode == 3)
 		{
 			/*Exit*/
 			if(menu_select == 'E'||menu_select == 'e')
