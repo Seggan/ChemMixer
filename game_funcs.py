@@ -4,22 +4,42 @@ def codify(text):
     fi=fi.strip()
     fi=fi.lower()
     return fi
+def count(obj):
+    li=obj
+    countlist=list()
+    inlist=list()
+    count=0
+    for a in li:
+        count=0
+        for b in obj:
+            if b==a:
+                count+=1
+        inlist=[a,count]
+        if not inlist in countlist:
+            countlist.append(inlist)
+    return countlist
 class CreativeBeaker():
     """A class to represent a beaker for creative mode"""
     def __init__(self):
         from json import load
-        self.contents=list()
-        self.reactions=dict()
+        self.chemicals=list()
+        reactions=dict()
         with open("reactions.json",'r') as r:
             self.reactions=load(r)
         self.cont=False
-    def add(self,chemical):
+    def add(self,chemical,chemdict):
         """Adds a chemical"""
-        self.contents.append(codify(chemical))
+        if codify(chemical) in chemdict.keys():
+            self.chemicals.append(codify(chemical))
+        else:
+            self.cont=True
     def extract(self,chemi):
         """Removes a chemical"""
         if chemi:
-            self.contents.remove(chemi)
+            if chemi in self.chemicals:
+                self.chemicals.remove(chemi)
+            else:
+                self.cont=True
         else:
             print("\n\tSorry, but there is nothing to remove.\n")
     def reset(self):
@@ -31,20 +51,19 @@ class CreativeBeaker():
         tmp=0
         for a in self.reactions.keys():
             s1=set(self.reactions[a]["reactants"])
-            s2=set(self.contents)
+            s2=set(self.chemicals)
             if s1.issubset(s2) and (temp>self.reactions[a]["temp min"] and temp<=self.reactions[a]["temp max"]):
                 for c in self.reactions[a]["reactants"]:
                     self.extract(c)
                 for d in self.reactions[a]["results"]:
                     self.add(d,chemdict)
                 print("\nA reaction has occurred.")
-    def show_contents(self,temp,chemdict):
+    def contents(self,temp,chemdict):
         """Shows the contents of the beaker"""
-        txt="Your beaker is at "+str(temp)+''' degrees Celsius and has the
-following chemicals inside:'''
-        for chemical in self.contents:
-            txt+='\n'+chemdict[chemical]["state"]+' '+chemical
-        return txt
+        print("\nYour beaker is at ",temp,''' degrees Celsius and has the
+following chemicals inside:''')
+        for chemical in self.chemicals:
+            print(chemdict[chemical]["state"],chemical)
 class DiscoveryBeaker(CreativeBeaker):
     def __init__(self):
         super().__init__()
@@ -61,3 +80,10 @@ def change_states(temp,chemdict):
             chemdict[chem]["state"]="liquid"
         if temp<=chemdict[chem]["melting_point"]:
             chemdict[chem]["state"]="solid"
+        
+        
+                  
+    
+        
+    
+            

@@ -1,38 +1,163 @@
 from game_funcs import *
+from time import sleep
 from json import load
-import sys
-from tkinter import *
-class GUI(Frame):
-    def __init__(self, master, names, temp, chem):
-        super().__init__(master)
-        self.master=master
-        self.init_widgets(names, temp, chem)
-    def init_widgets(self, names, temp, chem):
-        self.menubar=Menu(self.master)
-        self.add=Menu(self.menubar)
-        for name in names:
-            self.add.add_command(label=name, command=lambda n=name:beaker.add(n))
-        self.menubar.add_cascade(label="Add", menu=self.add)
-        root.config(menu=self.menubar)
-        self.text=beaker.show_contents(temp, chem)
-        self.contents=Label(self.master, text=self.text)
-        self.contents.pack(side=TOP)
-    def update_contents(self, temp, chem):
-        self.text=beaker.show_contents(temp, chem)
-        self.contents.config(text=self.text)
-        self.contents.pack(side=TOP)
-with open("chemicals.json",'r') as r:
-    chemdict=load(r)
-temperature=20
-beaker=CreativeBeaker()
-root=Tk()
-root.geometry("1000x700")
-root.title("ChemMixer 4.0.0")
-gui=GUI(root,[name for name in chemdict.keys()], temperature, chemdict)
-# A try-except for stopping the
-while True:
-    try:
-        gui.update_contents(temperature, chemdict)
-        root.update()
-    except:
-        sys.exit()
+from sys import exit
+add_dict=dict()
+remove_dict=dict()
+with open("chemicals.json",'r') as c:
+    chemdict=load(c)
+temperature=19
+print('''ChemMixer 2.2.0
+
+What's new:
+fixed some bugs,
+added discovery mode,
+added aluminum derivatives,
+added more reactions
+That's all.\n''')
+print('''Welcome to ChemMixer, a chemistry lab simulator.
+Let's get started.''')
+mode=codify(input('''\nWhich mode?
+1)Creative Mode
+2)Discovery Mode
+3)Carrer Mode
+'''))
+if mode=="1":
+    beaker=CreativeBeaker()
+    x=1
+    for n in chemdict:
+        add_dict[x]=n
+        x+=1
+    while True:
+        beaker.cont=False
+        cmd=codify(input('''\n1)Add a chemical
+2)Remove a chemical
+3)Change the temperature
+4)Exit
+5)Empty the beaker
+\nType in the number of the command you want to execute: '''))
+        if cmd=="1":
+            msg="\nWhat chemical should I add?"
+            for n in add_dict:
+                msg+="\n"+str(n)+")"+add_dict[n]
+            cmd2=codify(input(msg+"\n"))
+            chem=add_dict[int(cmd2)]
+            beaker.add(chem,chemdict)
+        elif cmd=="2":
+            msg="\nWhat chemical should I remove?"
+            x=1
+            remove_dict=dict()
+            for n in creative_beaker.chemicals:
+                remove_dict[x]=n
+                x+=1
+            for n in remove_dict:
+                msg+="\n"+str(n)+")"+remove_dict[n]
+            cmd2=codify(input(msg+"\n"))
+            chem=remove_dict[int(cmd2)]
+            beaker.extract(chem)
+        elif cmd=="3":
+            cmd2=codify(input("\nWhat temperature should I set the beaker to? "))
+            try:
+                if int(cmd2)<-273:
+                    print("\nPlease enter a number larger than -274.")
+                    continue
+                if int(cmd2)>3500:
+                    print("\nThe beaker melted! Starting with a new one.")
+                    beaker.reset()
+                    continue
+                temperature=int(cmd2.rstrip())
+                change_states(temperature,chemdict)
+            except TypeError:
+                print("\nPlease enter a number.")
+        elif cmd=="4":
+            print("\nCredits:")
+            sleep(1)
+            print("Idea based on: BEAKER, by THIX; CHEMIST, by THIX")
+            sleep(1)
+            print("Programmer: Daniel K.")
+            sleep(1)
+            print("Testers: Lianna K., Irina K., Daniel K., Drew Drew us")
+            sleep(1)
+            exit()
+        elif cmd=="5":
+            beaker.reset()
+            print("The beaker is now empty.")
+        else:
+            print("Sorry, but",cmd,"is not a valid command. Please try again.")
+        if not beaker.cont:
+            for n in range(0,100):
+                beaker.react(temperature,chemdict)
+            beaker.contents(temperature,chemdict)
+else:
+    beaker=DiscoveryBeaker()
+    while True:
+        x=1
+        for n in beaker.discovered_chemicals:
+            add_dict[x]=n
+            x+=1
+        beaker.cont=False
+        cmd=codify(input('''\n1)Add a chemical
+2)Remove a chemical
+3)Change the temperature
+4)Exit
+5)Empty the beaker
+\nType in the number of the command you want to execute: '''))
+        if cmd=="1":
+            msg="\nWhat chemical should I add?"
+            for n in add_dict:
+                msg+="\n"+str(n)+")"+add_dict[n]
+            cmd2=codify(input(msg+"\n"))
+            chem=add_dict[int(cmd2)]
+            beaker.add(chem,chemdict)
+        elif cmd=="2":
+            msg="\nWhat chemical should I remove?"
+            x=1
+            remove_dict=dict()
+            for n in beaker.chemicals:
+                remove_dict[x]=n
+                x+=1
+            for n in remove_dict:
+                msg+="\n"+str(n)+")"+remove_dict[n]
+            cmd2=codify(input(msg+"\n"))
+            chem=remove_dict[int(cmd2)]
+            beaker.extract(chem)
+        elif cmd=="3":
+            cmd2=codify(input("\nWhat temperature should I set the beaker to? "))
+            try:
+                if int(cmd2)<-273:
+                    print("\nPlease enter a number larger than -274.")
+                    continue
+                if int(cmd2)>3500:
+                    print("\nThe beaker melted! Starting with a new one.")
+                    beaker.reset()
+                    continue
+                temperature=int(cmd2.rstrip())
+                change_states(temperature,chemdict)
+            except TypeError:
+                print("\nPlease enter a number.")
+        elif cmd=="4":
+            print("\nCredits:")
+            sleep(1)
+            print("Idea based on: BEAKER, by THIX; CHEMIST, by THIX")
+            sleep(1)
+            print("Programmer: Daniel K.")
+            sleep(1)
+            print('''Testers: Lianna K., Irina K., Daniel K., Drew Drew us,
+JesusAntonio5, Droseraman''')
+            sleep(1)
+            exit()
+        elif cmd=="5":
+            beaker.reset()
+            print("The beaker is now empty.")
+        else:
+            print("Sorry, but",cmd,"is not a valid command. Please try again.")
+        if not beaker.cont:
+            for n in range(0,100):
+                beaker.react(temperature,chemdict)
+            for n in beaker.chemicals:
+                if not n in beaker.discovered_chemicals:
+                    print("\nNew chemical discovered!",n)
+                    beaker.discovered_chemicals.append(n)
+            beaker.contents(temperature,chemdict)
+    
+        
