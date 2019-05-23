@@ -10,6 +10,7 @@ FILE *fp;
 #define KEY_LEFT 75
 #define KEY_ENTER 13
 #define MAX_NUM_CHEMICALS 64;
+char NUM_REACTIONS = 28;
 char NUM_CHEMICALS = 24;
 
 struct json_chemical_file
@@ -31,13 +32,15 @@ struct json_react_file
 	short max_temp;
 	short min_temp;
 	char type[255];
+	char string_hold[255];
 };
 
 char menu_select = 0;
 short u;
 short k;
 short mj;
-char gh_check;
+short gh_check;
+short n;
 
 /*In game data*/
 short igd_data_temp;
@@ -51,14 +54,15 @@ short jcfs_data_mass[32];
 
 /*React Data (other 4kb!)*/
 char jrfs_data_react_name[32][255];
-char jrfs_data_reactants[32][255];
-char jrfs_data_result[32][255];
+char jrfs_data_reactants[32][32];
+char jrfs_data_reactants_num[32];
+char jrfs_data_result_num[32];
+char jrfs_data_result[32][32];
 short jrfs_data_max_temp[32];
 short jrfs_data_min_temp[32];
 char holder__3[255];
 
 char page_number;
-const char s = ',';
 
 /*Get the total amount of chemicals per ID*/
 short jcfs_use_amount[32];
@@ -204,7 +208,7 @@ char parse_reaction_json(const char* json_chemical_filename)
 		/*Return Error Code 0*/
 		return 0;
 	}
-	for(t = 0; t < NUM_CHEMICALS; t++)
+	for(t = 0; t < NUM_REACTIONS; t++)
 	{
 		/*Seek for the reaction name*/
 		ch_piec = check_for('"');
@@ -243,7 +247,51 @@ char parse_reaction_json(const char* json_chemical_filename)
 						/*Set ch_piec to 0, so we dont write anything else*/
 						/*Plus remove the " from it, so its clean*/
 						holder2.reactants[o] = 0;
-						printf("\nREACTANTS: %s\n",holder2.reactants);
+						/*Number of string*/
+						mj = 0;
+						gh_check = 1;
+						for(u = 0; u < 255; u++)
+						{
+							if(holder2.reactants[u] == '"'&&holder2.reactants[u+1] != ']')
+							{
+								holder2.reactants[u] = 0;
+								if(holder2.reactants[u+1] == ','||holder2.reactants[u+1] == '"')
+								{
+									holder2.reactants[u+1] = 0;
+								}
+								if(holder2.reactants[gh_check] != 0)
+								{
+									if(mj != 0)
+									{
+										n = 0;
+										for(k = gh_check; k < u; k++)
+										{
+											holder2.string_hold[n] = holder2.reactants[k];
+											n++;
+										}
+										n = 0;
+										for(k = 0; k < NUM_CHEMICALS; k++)
+										{
+											if(strcmp(holder2.string_hold,jcfs_data_chem_name[k]) == 0)
+											{
+												jrfs_data_reactants[t][k] = 1;
+											}
+										}
+										/*Set back string to its normal form*/
+										for(k = 0; k < 255; k++)
+										{
+											holder2.string_hold[k] = 0;
+										}
+									}
+									jrfs_data_reactants_num[t] = mj;
+									mj++;
+								}
+								gh_check = u+1;
+							}
+						}
+						/*
+						printf("\nRESULTS: %s\n",holder2.result);
+						*/
 						ch_piec = 0;
 						break;
 					}
@@ -279,7 +327,51 @@ char parse_reaction_json(const char* json_chemical_filename)
 						/*Set ch_piec to 0, so we dont write anything else*/
 						/*Plus remove the " from it, so its clean*/
 						holder2.result[o] = 0;
+						/*Number of string*/
+						mj = 0;
+						gh_check = 1;
+						for(u = 0; u < 255; u++)
+						{
+							if(holder2.result[u] == '"'&&holder2.result[u+1] != ']')
+							{
+								holder2.result[u] = 0;
+								if(holder2.result[u+1] == ','||holder2.result[u+1] == '"')
+								{
+									holder2.result[u+1] = 0;
+								}
+								if(holder2.result[gh_check] != 0)
+								{
+									if(mj != 0)
+									{
+										n = 0;
+										for(k = gh_check; k < u; k++)
+										{
+											holder2.string_hold[n] = holder2.result[k];
+											n++;
+										}
+										n = 0;
+										for(k = 0; k < NUM_CHEMICALS; k++)
+										{
+											if(strcmp(holder2.string_hold,jcfs_data_chem_name[k]) == 0)
+											{
+												jrfs_data_result[t][k] = 1;
+											}
+										}
+										/*Set back string to its normal form*/
+										for(k = 0; k < 255; k++)
+										{
+											holder2.string_hold[k] = 0;
+										}
+									}
+									jrfs_data_result_num[t] = mj;
+									mj++;
+								}
+								gh_check = u+1;
+							}
+						}
+						/*
 						printf("\nRESULTS: %s\n",holder2.result);
+						*/
 						ch_piec = 0;
 						break;
 					}
@@ -289,7 +381,28 @@ char parse_reaction_json(const char* json_chemical_filename)
 		memccpy(jrfs_data_react_name[t],holder2.react_name,holder2.react_name,strlen(holder2.react_name)+1);
 		jrfs_data_max_temp[t] = holder2.max_temp;
 		jrfs_data_min_temp[t] = holder2.min_temp;
+		/*
+		printf("\n------ REACTION %s DATA ------",jrfs_data_react_name[t]);
+		printf("\nREACTS : ");
+		for(k = 0; k < NUM_CHEMICALS; k++)
+		{
+			if(jrfs_data_reactants[t][k] > 0)
+			{
+				printf("%s, ",jcfs_data_chem_name[k]);
+			}
+		}
+		printf("\nRESULTS : ");
+		for(k = 0; k < NUM_CHEMICALS; k++)
+		{
+			if(jrfs_data_result[t][k] > 0)
+			{
+				printf("%s, ",jcfs_data_chem_name[k]);
+			}
+		}
+		printf("\nMAX TEMPERATURE : %d",jrfs_data_max_temp[t]);
+		printf("\nMIN TEMPERATURE : %d",jrfs_data_min_temp[t]);
 		getch();
+		*/
 	}
 	return 1;
 }
@@ -344,6 +457,7 @@ int main(void)
 	/*Now make a list of the chemicals and also
 	*copy the data into the structures*/
 	parse_chemical_json("CHEMICAL.JSO");
+	parse_reaction_json("REACT.JSO");
 	igd_data_temp = 20;
 	/*After this point we dont need to bother
 	 * about opening files because everything
@@ -352,6 +466,10 @@ int main(void)
 	 * memory*/
 	cursor_pos.x = 0;
 	cursor_pos.y = 0;
+	for(k = 0; k < NUM_CHEMICALS; k++)
+	{
+		jcfs_use_amount[k] = 0;
+	}
 	for(;;)
 	{
 		set_video_to_text();
@@ -368,6 +486,26 @@ int main(void)
 			if(jcfs_data_boiling_point[y] <= igd_data_temp)
 			{
 				jcfs_data_state_name[y] = 1;
+			}
+		}
+		/*Now lets check if its compatible with any reaction*/
+		for(mj = 0; mj < NUM_REACTIONS; mj++)
+		{
+			n = 0;
+			if(igd_data_temp > jrfs_data_min_temp[mj]&&igd_data_temp < jrfs_data_max_temp[mj])
+			{
+				printf("Temp is OK! for %s ",jrfs_data_react_name[mj]);
+				for(k = 0; k < NUM_CHEMICALS; k++)
+				{
+					if(jrfs_data_reactants[k] > 0)
+					{
+						if(jcfs_use_amount[k] > 0)
+						{
+							printf("Chemicals are OK! for %s ",jrfs_data_react_name[mj]);
+						}
+					}
+				}
+				break;
 			}
 		}
 		gotoxy(0,0);
@@ -561,11 +699,11 @@ int main(void)
 			}
 			case 3:
 			{
-				/*
-				parse_reaction_json("REACT.JSO");
-				* */
 				printf("More coming soon!");
-				parse_reaction_json("REACT.JSO");
+				for(mj = 0; mj < NUM_CHEMICALS; mj++)
+				{
+					printf("REACT NUM: %d %s\n",jrfs_data_reactants_num[mj],jrfs_data_react_name[mj]);
+				}
 				break;
 			}
 			case 4:
