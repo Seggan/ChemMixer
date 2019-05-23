@@ -12,8 +12,6 @@ FILE *fp;
 #define MAX_NUM_CHEMICALS 64;
 char NUM_CHEMICALS = 24;
 
-char menu_select = 0;
-
 struct json_chemical_file
 {
 	char chem_name[255];
@@ -32,9 +30,11 @@ struct json_react_file
 	char result[255];
 	short max_temp;
 	short min_temp;
+	char type[255];
 };
 
-char u;
+char menu_select = 0;
+short u;
 short k;
 short mj;
 char gh_check;
@@ -46,17 +46,19 @@ short igd_data_temp;
 char jcfs_data_chem_name[32][255];
 short jcfs_data_melting_point[32];
 short jcfs_data_boiling_point[32];
-char jcfs_data_state_name[32][255];
+char jcfs_data_state_name[32];
 short jcfs_data_mass[32];
 
 /*React Data (other 4kb!)*/
 char jrfs_data_react_name[32][255];
-char jrfs_data_reactants[32][32];
-char jrfs_data_result[32][32];
+char jrfs_data_reactants[32][255];
+char jrfs_data_result[32][255];
 short jrfs_data_max_temp[32];
 short jrfs_data_min_temp[32];
+char holder__3[255];
 
 char page_number;
+const char s = ',';
 
 /*Get the total amount of chemicals per ID*/
 short jcfs_use_amount[32];
@@ -85,6 +87,7 @@ char check_for(char check)
 		}
 	}
 }
+
 
 char parse_chemical_json(const char* json_chemical_filename)
 {
@@ -191,7 +194,6 @@ char parse_chemical_json(const char* json_chemical_filename)
 
 char parse_reaction_json(const char* json_chemical_filename)
 {
-	char another = 0;
 	int ch_piec;
 	int o;
 	int t = 0;
@@ -228,10 +230,8 @@ char parse_reaction_json(const char* json_chemical_filename)
 		ch_piec = check_for(':');
 		/*Finaly, lets seek out the reactants
 		 *or components, btw*/
-		ch_piec = check_for(':');
 		ch_piec = check_for('[');
-		u = 0;
-		while(ch_piec == 1)
+		if(ch_piec == 1)
 		{
 			for(o = 0;o < 255;o++)
 			{
@@ -243,18 +243,7 @@ char parse_reaction_json(const char* json_chemical_filename)
 						/*Set ch_piec to 0, so we dont write anything else*/
 						/*Plus remove the " from it, so its clean*/
 						holder2.reactants[o] = 0;
-						/*First char, is 0*/
-						holder2.reactants[0] = 0;
-						for(k = 0; k < 255; k++)
-						{
-							if(holder2.reactants[k] == '"'&&holder2.reactants[k+1] == ',')
-							{
-								for(mj = 0; mj < k-1; mj++)
-								{
-									jrfs_data_reactants[u][mj] = holder2.reactants[mj];
-								}u++;
-							}
-						}
+						printf("\nREACTANTS: %s\n",holder2.reactants);
 						ch_piec = 0;
 						break;
 					}
@@ -277,10 +266,8 @@ char parse_reaction_json(const char* json_chemical_filename)
 		}
 		/*Finaly, lets seek out the reactants
 		 *or components, btw*/
-		ch_piec = check_for(':');
 		ch_piec = check_for('[');
-		u = 0;
-		while(ch_piec == 1)
+		if(ch_piec == 1)
 		{
 			for(o = 0;o < 255;o++)
 			{
@@ -292,19 +279,7 @@ char parse_reaction_json(const char* json_chemical_filename)
 						/*Set ch_piec to 0, so we dont write anything else*/
 						/*Plus remove the " from it, so its clean*/
 						holder2.result[o] = 0;
-						/*First char, is 0*/
-						holder2.result[0] = 0;
-						for(k = 0; k < 255; k++)
-						{
-							if(holder2.result[k] == '"'&&holder2.result[k+1] == ',')
-							{
-								for(mj = 0; mj < k-1; mj++)
-								{
-									jrfs_data_result[u][mj] = holder2.result[mj];
-								}
-								u++;
-							}
-						}
+						printf("\nRESULTS: %s\n",holder2.result);
 						ch_piec = 0;
 						break;
 					}
@@ -359,14 +334,13 @@ struct s_cursor_pos
 
 struct s_cursor_pos cursor_pos;
 
-int main()
+int main(void)
 {
 	char select_mode = 0;
 	char y,x;
 	char menu_check;
 	char menu_cc;
 	int o;
-	char selection = 0;
 	/*Now make a list of the chemicals and also
 	*copy the data into the structures*/
 	parse_chemical_json("CHEMICAL.JSO");
@@ -383,6 +357,19 @@ int main()
 		set_video_to_text();
 		/*1st to 4th line*/
 		set_text_color_fullscreen(0x1F);
+		for(y = 0; y < NUM_CHEMICALS;y++)
+		{
+			/*Becomes Liquid*/
+			if(jcfs_data_melting_point[y] <= igd_data_temp)
+			{
+				jcfs_data_state_name[y] = 1;
+			}
+			/*Becomes Gaseous*/
+			if(jcfs_data_boiling_point[y] <= igd_data_temp)
+			{
+				jcfs_data_state_name[y] = 1;
+			}
+		}
 		gotoxy(0,0);
 		print_line_of('\xC9','\xCD','\xBB');
 		printf("\xBA Chemixer 0.1.2");
@@ -484,12 +471,48 @@ int main()
 					if(jcfs_use_amount[y] > 0)
 					{
 						printf(" (%d) %s",jcfs_use_amount[y],jcfs_data_chem_name[y]);
+						switch(jcfs_data_state_name[y])
+						{
+							/*Liquid*/
+							case 0:
+								printf("( \xB2 )");
+								break;
+							/*Gaseous*/
+							case 1:
+								printf("( \xB0 )");
+								break;
+							/*Solid*/
+							case 2:
+								printf("( \xDB )");
+								break;
+							default:
+								printf("( ? )");
+								break;
+						}
 					}
 					gotoxy(40,8+(y/2));
 					printf("\xBA");
 					if(jcfs_use_amount[y+1] > 0)
 					{
 						printf(" (%d) %s",jcfs_use_amount[y+1],jcfs_data_chem_name[y+1]);
+						switch(jcfs_data_state_name[y+1])
+						{
+							/*Liquid*/
+							case 0:
+								printf("( \xB2 )");
+								break;
+							/*Gaseous*/
+							case 1:
+								printf("( \xB0 )");
+								break;
+							/*Solid*/
+							case 2:
+								printf("( \xDB )");
+								break;
+							default:
+								printf("( ? )");
+								break;
+						}
 					}
 					gotoxy(79,8+(y/2));
 					printf(" \xBA");
@@ -538,6 +561,10 @@ int main()
 			}
 			case 3:
 			{
+				/*
+				parse_reaction_json("REACT.JSO");
+				* */
+				printf("More coming soon!");
 				parse_reaction_json("REACT.JSO");
 				break;
 			}

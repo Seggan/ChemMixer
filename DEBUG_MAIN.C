@@ -341,17 +341,17 @@ char parse_chemical_json(const char* json_chemical_filename)
 		}
 		gotoxy(0,8+t);
 		printf("\xBA %s",holder.chem_name);
-		gotoxy(30,8+t);
+		gotoxy(30,9+t);
 		printf("\xBA %d",holder.melting_point);
-		gotoxy(40,8+t);
+		gotoxy(40,10+t);
 		printf("\xBA %d",holder.boiling_point);
-		gotoxy(50,8+t);
+		gotoxy(50,11+t);
 		printf("\xBA %d",holder.mass);
-		gotoxy(60,8+t);
+		gotoxy(60,12+t);
 		printf("\xBA %s",holder.state_name);
-		gotoxy(70,8+t);
+		gotoxy(70,13+t);
 		printf("\xBA %d",holder.state_id);
-		gotoxy(80,8+t);
+		gotoxy(80,14+t);
 		printf("\xBA");
 		gotoxy(0,8+t);
 		if(d == t)
