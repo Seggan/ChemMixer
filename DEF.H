@@ -22,6 +22,7 @@ char parse_reaction_json(const char* __json_chemical_filename);
 void set_text_color_fullscreen(char __color);
 void set_text_color_8(char __color);
 void print_line_of(char __c1,char __c2,char __c3);
+unsigned char pgetch(void);
 
 typedef struct json_chemical_file
 {

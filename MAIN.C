@@ -1,6 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <dos.h>
+#include <conio.h>
 #include "EGI.H"
 #include "DEF.H"
+
+
+unsigned char pgetch(void)
+{
+	#if defined (__APPLE2__)
+	return cgetc();
+	#elif defined (__MSDOS__) || defined (_MSDOS) || defined (MS_DOS) 
+	return getch();
+	#endif
+}
 
 char check_for(char check)
 {
@@ -328,7 +341,7 @@ char parse_reaction_json(const char* json_chemical_filename)
 		}
 		printf("\nMAX TEMPERATURE : %d",jrfs_data_max_temp[t]);
 		printf("\nMIN TEMPERATURE : %d",jrfs_data_min_temp[t]);
-		getch();
+		pgetch();
 	}
 	return 1;
 }
@@ -340,16 +353,6 @@ void set_text_color_fullscreen(char color)
 	regs.h.bl = color;
 	regs.h.al = 0x20;
 	regs.x.cx = 0x1000;
-	int86(0x10, &regs, &regs);
-}
-
-void set_text_color_8(char color)
-{
-	union REGS regs;
-	regs.h.ah = 0x09;
-	regs.h.bl = color;
-	regs.h.al = 0x20;
-	regs.x.cx = 0x8;
 	int86(0x10, &regs, &regs);
 }
 
@@ -387,7 +390,7 @@ int main(void)
 	}
 	for(;;)
 	{
-		set_video_to_text();
+		set_video(0x03);
 		/*1st to 4th line*/
 		set_text_color_fullscreen(0x1F);
 		for(y = 0; y < NUM_CHEMICALS;y++)
@@ -444,6 +447,9 @@ int main(void)
 		}
 		gotoxy(0,0);
 		print_line_of('\xC9','\xCD','\xBB');
+		#if defined (__TURBOC__) || defined (__TURBOC)
+		printf("turbo c lelo");
+		#endif
 		printf("\xBA Chemixer 0.6.2");
 		gotoxy(79,2);
 		printf(" \xBA");
@@ -681,7 +687,7 @@ int main(void)
 				break;
 			}
 		}
-		menu_select = getch();
+		menu_select = pgetch();
 		/*Select Mode*/
 		switch(select_mode)
 		{
@@ -709,7 +715,7 @@ int main(void)
 				}
 				if(menu_select == 'E'||menu_select == 'e')
 				{
-					set_video_to_text();
+					set_video(0x03);
 					return 0;
 				}
 				break;

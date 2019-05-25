@@ -1,163 +1,120 @@
 #ifndef EGI_H
 #define EGI_H
-#include <stdlib.h>
-#include <conio.h>
-#include <dos.h>
 
-#ifndef VIDEO_INT
-	#define VIDEO_INT 0x10
-#elif
-	#undef VIDEO_INT
-	#define VIDEO_INT 0x10
-#endif
-#ifndef WRITE_DOT
-	#define WRITE_DOT 0x0C
-#elif
-	#undef WRITE_DOT
-	#define WRITE_DOT 0x0C
-#endif
-#ifndef SCREEN_WIDTH
-	#define SCREEN_WIDTH 320
-#elif
-	#undef SCREEN_WIDTH
-	#define SCREEN_WIDTH 320
-#endif
-#ifndef SCREEN_HEIGHT
-	#define SCREEN_HEIGHT 200
-#elif
-	#undef SCREEN_HEIGHT
-	#define SCREEN_HEIGHT 200
-#endif
-#ifndef NUM_COLORS
-	#define NUM_COLORS 256
-#elif
-	#undef NUM_COLORS
-	#define NUM_COLORS 256
-#endif
+#define VIDEO_MODE_MONOCHROME	0x11
+#define VIDEO_MODE_VGA_256 	0x13
+#define VIDEO_MODE_TEXT		0x03
 
-/*
-EGI Library
+#define EGI_VERSION		1.3
 
-Reads and parses EGI files
-Functions:
+/*Function prototypes*/
+extern void * malloc(size_t _size);
+extern void * realloc(void * ptr,size_t _size);
 
-test_draw(void)
-Draws a test screen with a complete palette of all VGA colors
+void set_video(char mode);
+char get_video(void);
+void write_pixel(int x,int y,char color);
+char egi_open_file(const char* filename,FILE *stream,int preset_coord_x,int preset_coord_y);
 
-read_image_file(const char* egi_file,int ppos_x,int ppos_y)
-Parses and then draws a specified image, then ppos_x and ppos_y
-allows image to be placed anywhere you want (starting at corner 0x0).
-*/
+/*Used in mallocs and frees, to not take
+ *uneeded memory space, remember that this
+ *is MS-DOS!*/
+static unsigned char *mem_hand;
+static unsigned char e_signature;
+static int e_width;
+static int e_height;
+static int pixel_count;
+static int pixel_track;
+static int coord_x;
+static int coord_y;
+union REGS regs;
 
-/*Is video int already declared?, then undefine it and
- * put our own to avoid conflicts*/
-
-/*File data type*/
-FILE *fps;
-FILE *m_file;
-/*Typedefs*/
-typedef const char* str;
-typedef char byte;
-typedef short word;
-typedef long dword;
-typedef long long qword;
-/*Based on VGA basics programing and in ASM tutorials*/
-byte *VGA=(byte *)0xA0000000L;
-word *CPU_CLOCK=(word *)0x0000046C;
-static unsigned char f_read_pixel[2],f_read_header[1],read_header[2];
-static int g,i,m,j;
-static char read_pixel;
-/*Set the 256 VGA color mode*/
-void set_video_to_graphic(void)
+#if defined (__MSDOS__) || defined (_MSDOS) || defined (MS_DOS) 
+/*Set the desired video mode*/
+void set_video(char mode)
 {
-	union REGS regs;
 	regs.h.ah = 0x00;
-	regs.h.al = 0x13;
+	regs.h.al = mode;
 	int86(0x10,&regs,&regs);
+	return;
 }
-/*Set video back to text*/
-void set_video_to_text(void)
+/*Get video mode*/
+char get_video(void)
 {
-	union REGS regs;
-	regs.h.ah = 0x00;
-	regs.h.al = 0x03;
+	regs.h.ah = 0x0F;
 	int86(0x10,&regs,&regs);
+	return regs.h.al;
 }
 /*Write a pixel*/
 void write_pixel(int x,int y,char color)
 {
-	union REGS regs;
 	regs.h.ah = 0x0C;
 	regs.x.cx = x;
 	regs.x.dx = y;
 	regs.h.al = color;
 	int86(0x10, &regs, &regs);
+	return;
 }
-/*Test that graphic mode
- * is already set*/
-void test_draw(void)
+#elif defined (__APPLE2__)
+void set_video(void)
 {
-	set_video_to_graphic();
-	for(i=0;i<SCREEN_HEIGHT;i++)
-	{
-		for(j=0;j<SCREEN_WIDTH;j++)
-		{
-			write_pixel(j,i,m);
-		}
-		m++;
-	}
+  	printf("Your system is not supported");
+  	return;
 }
-/*Used for even more bakcward compatibility
- * and is suggested to be used on small programs
- * or test programs, since this one is volatile,
- * unescesarily big and can cause stream errors*/
-void read_image_file(const char* egi_file,unsigned char ppos_x,unsigned char ppos_y)
+void get_video(void)
 {
-	fps = fopen(egi_file,"rb");
-	if(!fps)
-	{
-		printf("File not found, Cant find file %s",egi_file);
-		return;
-	}
-	fread(&f_read_header,1,2,fps);
-	for(g = 0;g < f_read_header[0]*f_read_header[1];g++)
-    {
-		fread(&f_read_pixel,1,3,fps);
-		write_pixel(f_read_pixel[0]+ppos_x,f_read_pixel[1]+ppos_y,f_read_pixel[2]);
-    }
-	fclose(fps);
+  	printf("Your system is not supported");
+  	return;
 }
+void write_pixel(void)
+{
+  	printf("Your system is not supported");
+  	return;
+}
+#endif
 
-/*Used for backwards compatibility and small
- * exceptions to the memcpy*/
-void read_image_file_new(const char* egi_file,unsigned int ppos_x,unsigned int ppos_y)
+char egi_open_file(const char* filename,FILE *stream,int preset_coord_x,int preset_coord_y)
 {
-	fps = fopen(egi_file,"rb");
-	if(!fps)
+	stream = fopen(filename,"rb");
+	if(!stream)
 	{
-		printf("File not found, Cant find file %s",egi_file);
-		return;
+		printf("Error: File not found");
+		return 0;
 	}
-	fread(&read_header,1,3,fps);
-	if(read_header[0] != 33)
+	mem_hand = malloc(3);
+	fread(mem_hand,1,3,stream);
+	e_signature = mem_hand[0];
+	if(mem_hand[1]+1 == mem_hand[2]+1)
 	{
-		read_image_file(egi_file,ppos_x,ppos_y);
-		return;
+		pixel_count = ((mem_hand[1]+1)<<4);
 	}
-	for(g = 0;g < read_header[1]+1;g++)
-    {
-		for(i = 0;i < read_header[2]+1;i++)
+	else
+	{
+		pixel_count = (mem_hand[1]+1)*(mem_hand[2]+1);
+	}
+	e_width = mem_hand[1];
+	e_height = mem_hand[2];
+	if(pixel_count < 1)
+	{
+		printf("Null Dimensions");
+		return -1;
+	}
+	mem_hand = realloc(mem_hand,mem_hand[1]*mem_hand[2]);
+	fread(mem_hand,1,pixel_count,stream);
+	coord_x = 0; coord_y = 0;
+	for(pixel_track = 0; pixel_track < (pixel_count+1); pixel_track++)
+	{
+		write_pixel(coord_x+preset_coord_x,coord_y+preset_coord_y,mem_hand[pixel_track]);
+		coord_x++;
+		if(coord_x > e_width)
 		{
-			fread(&read_pixel,1,1,fps);
-			if(read_pixel > 1)
-			{
-				write_pixel(i+ppos_x,g+ppos_y,read_pixel);
-			}
+			coord_x = 0;
+			coord_y++;
 		}
 	}
-	fclose(fps);
+	free(mem_hand);
+	fclose(stream);
+	return 0;
 }
-
-/*End of EGI library*/
 
 #endif
