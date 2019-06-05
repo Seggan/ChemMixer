@@ -104,8 +104,8 @@ class GUI(Frame):
         self.creds.title("Credits")
         self.credit_text=Label(self.creds, text='''
 Idea based on: BEAKER, by THIX; CHEMIST, by THIX
-Programmer: Daniel K.
-Testers: Lianna K., Irina K., Daniel K., Drew Drew us
+Programmers: Daniel K., Super Leaf 1995
+Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality, Droseraman, Super Leaf 1995
 ''')
         self.credit_text.pack()
     def create_temp_win(self):
