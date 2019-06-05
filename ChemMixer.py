@@ -162,7 +162,7 @@ temperature=20
 beaker=Beaker(chemdict)
 root=Tk()
 root.geometry("1000x700")
-root.title("ChemMixer 4.0.0")
+root.title("ChemMixer 0.4.0")
 gui=GUI(root, temperature, chemdict)
 #A try-except to catch an error when exiting
 while True:
