@@ -37,7 +37,8 @@ while True:
         "melting_point":melting,
         "boiling_point":boiling,
         "state":room_state,
-        "element":element
+        "element":element,
+        "parent":"modded"
         }
     n+=1
 n=1
