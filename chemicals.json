@@ -142,7 +142,7 @@
     "aluminum": {
         "melting_point": 660,
         "boiling_point": 2470,
-        "state": "solid"
+        "state": "solid",
         "element": true,
 		"parent":"elements"
     },
