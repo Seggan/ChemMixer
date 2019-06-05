@@ -1,95 +1,233 @@
 {
-"hydrogen":{
-			"melting_point":-259,
-			"boiling_point":-252,
-            "state":"gaseous"},
-"oxygen":{
-		"melting_point":-218,
-		"boiling_point":-183,
-		"state":"gaseous"},
-"water":{
-		"melting_point":0,
-		"boiling_point":100,
-		"state":"liquid"},
-"ozone":{
-		"melting_point":-192,
-		"boiling_point":-112,
-		"state":"gaseous"},
-"hydrogen peroxide":{
-					"melting_point":0,
-					"boiling_point":150,
-					"state":"liquid"},
-"nitrogen":{
-			"melting_point":-210,
-			"boiling_point":-196,
-			"state":"gaseous"},
-"ammonia":{
-			"melting_point":-78,
-			"boiling_point":-33,
-			"state":"gaseous"},
-"ammonium hydroxide":{
-					"melting_point":-58,
-					"boiling_point":38,
-				    "state":"liquid"},
-"helium":{
-		"melting_point":-272,
-		"boiling_point":-269,
-		"state":"gaseous"},
-"dihelium":{
-			"melting_point":-272,
-			"boiling_point":-269,
-		    	"state":"gaseous"},
-"hydrochloric acid":{
-					"melting_point":-43,
-					"boiling_point":84,
-				    "state":"liquid"},
-"ammonium chloride":{
-					"melting_point":338,
-					"boiling_point":520,
-				    	"state":"solid"},
-"hypochlorous acid":{
-					"melting_point":0,
-					"boiling_point":100,
-					"state":"liquid"},
-"chlorine":{
-			"melting_point":-101,
-			"boiling_point":-34,
-			"state":"gaseous"},
-"chloramine":{
-			"melting_point":-66,
-			"boiling_point":0,
-			"state":"gaseous"},
-"sulfuric acid":{
-				"melting_point":10,
-				"boiling_point":337,
-				"state":"liquid"},
-"ammonium sulfate":{
-					"melting_point":230,
-					"boiling_point":250,
-					"state":"solid"},
-"sulfur":{
-		"melting_point":115,
-		"boiling_point":444,
-		"state":"solid"},
-"sulfur dioxide":{
-				"melting_point":-72,
-				"boiling_point":-10,
-				"state":"gaseous"},
-"lithium":{"melting_point":180,
-			"boiling_point":1330,
-			"state":"solid"},
-"aluminum":{"melting_point":660,
-			"boiling_point":2470,
-			"state":"solid"},
-"aluminum chloride":{"melting_point":100,
-					"boiling_point":180,
-					"state":"solid"},
-"aluminum hydroxide":{"melting_point":300,
-					"boiling_point":4000,
-					"state":"solid"},
-"aluminum oxide":{"melting_point":2072,
-				"boiling_point":2977,
-				"state":"solid"},
-"aluminum sulfate":{"melting_point":770,
-				"boiling_point":4000,
-				"state":"solid"}}
+    "hydrogen": {
+        "melting_point": -259,
+        "boiling_point": -252,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "oxygen": {
+        "melting_point": -218,
+        "boiling_point": -183,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "water": {
+        "melting_point": 0,
+        "boiling_point": 100,
+        "state": "liquid",
+        "element": false,
+		"parent":"oxides"
+    },
+    "ozone": {
+        "melting_point": -192,
+        "boiling_point": -112,
+        "state": "gaseous",
+        "element": false,
+		"parent":"oxides"
+    },
+    "hydrogen peroxide": {
+        "melting_point": 0,
+        "boiling_point": 150,
+        "state": "liquid",
+        "element": false,
+		"parent":"oxides"
+    },
+    "nitrogen": {
+        "melting_point": -210,
+        "boiling_point": -196,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "ammonia": {
+        "melting_point": -78,
+        "boiling_point": -33,
+        "state": "gaseous",
+        "element": false,
+		"parent":"uncategorized"
+    },
+    "ammonium hydroxide": {
+        "melting_point": -58,
+        "boiling_point": 38,
+        "state": "liquid",
+        "element": false,
+		"parent":"hydroxides"
+    },
+    "helium": {
+        "melting_point": -272,
+        "boiling_point": -269,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "dihelium": {
+        "melting_point": -272,
+        "boiling_point": -269,
+        "state": "gaseous",
+        "element": false,
+		"parent":"dimers"
+    },
+    "hydrochloric acid": {
+        "melting_point": -43,
+        "boiling_point": 84,
+        "state": "liquid",
+        "element": false,
+		"parent":"chlorides"
+    },
+    "ammonium chloride": {
+        "melting_point": 338,
+        "boiling_point": 520,
+        "state": "solid",
+        "element": false,
+		"parent":"chlorides"
+    },
+    "hypochlorous acid": {
+        "melting_point": 0,
+        "boiling_point": 100,
+        "state": "liquid",
+        "element": false,
+		"parent":"uncategorized"
+    },
+    "chlorine": {
+        "melting_point": -101,
+        "boiling_point": -34,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "chloramine": {
+        "melting_point": -66,
+        "boiling_point": 0,
+        "state": "gaseous",
+        "element": false,
+		"parent":"uncategorized"
+    },
+    "sulfuric acid": {
+        "melting_point": 10,
+        "boiling_point": 337,
+        "state": "liquid",
+        "element": false,
+		"parent":"sulfates"
+    },
+    "ammonium sulfate": {
+        "melting_point": 230,
+        "boiling_point": 250,
+        "state": "solid",
+        "element": false,
+		"parent":"sulfates"
+    },
+    "sulfur": {
+        "melting_point": 115,
+        "boiling_point": 444,
+        "state": "solid",
+        "element": true,
+		"parent":"elements"
+    },
+    "sulfur dioxide": {
+        "melting_point": -72,
+        "boiling_point": -10,
+        "state": "gaseous",
+        "element": false,
+		"parent":"oxides"
+    },
+    "lithium": {
+        "melting_point": 180,
+        "boiling_point": 1330,
+        "state": "solid",
+        "element": true,
+		"parent":"elements"
+    },
+    "aluminum": {
+        "melting_point": 660,
+        "boiling_point": 2470,
+        "state": "solid"
+        "element": true,
+		"parent":"elements"
+    },
+    "aluminum chloride": {
+        "melting_point": 100,
+        "boiling_point": 180,
+        "state": "solid",
+        "element": false,
+		"parent":"chlorides"
+    },
+    "aluminum hydroxide": {
+        "melting_point": 300,
+        "boiling_point": 4000,
+        "state": "solid",
+        "element": false,
+		"parent":"hydroxides"
+    },
+    "aluminum oxide": {
+        "melting_point": 2072,
+        "boiling_point": 2977,
+        "state": "solid",
+        "element": false,
+		"parent":"oxides"
+    },
+    "aluminum sulfate": {
+        "melting_point": 770,
+        "boiling_point": 4000,
+        "state": "solid",
+        "element": false,
+		"parent":"sulfates"
+    },
+    "fluorine": {
+        "melting_point": -220,
+        "boiling_point": -188,
+        "state": "gaseous",
+        "element": true,
+		"parent":"elements"
+    },
+    "oxygen difluoride": {
+        "melting_point": -223,
+        "boiling_point": -145,
+        "state": "gaseous",
+        "element": false,
+		"parent":"fluorides"
+    },
+	"nitrogen triflouride": {
+        "melting_point": -207,
+        "boiling_point": -129,
+        "state": "gaseous",
+        "element": false,
+		"parent":"fluorides"
+    },
+    "aluminum trifluoride": {
+        "melting_point": 1290,
+        "boiling_point": 1291,
+        "state": "solid",
+        "element": false,
+		"parent":"fluorides"
+    },
+    "hydrofluoric acid": {
+        "melting_point": -84,
+        "boiling_point": 20,
+        "state": "liquid",
+        "element": false,
+		"parent":"fluorides"
+    },
+	"lithium fluoride": {
+        "melting_point": 845,
+        "boiling_point": 1676,
+        "state": "solid",
+        "element": false,
+		"parent":"fluorides"
+    },
+    "lithium hydride": {
+        "melting_point": 688,
+        "boiling_point": 1000,
+        "state": "solid",
+	    "element": false,
+		"parent":"uncategorized"
+    },
+    "lithium fluoride": {
+        "melting_point": 845,
+        "boiling_point": 1676,
+        "state": "solid",
+		"element": false,
+		"parent":"fluorides"
+    }
+}
