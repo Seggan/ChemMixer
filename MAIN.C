@@ -30,6 +30,7 @@
 #define DATA_NUM_REACTIONS		27
 #define STYLE_COLOR_SELECTED 		0xF0
 #define STYLE_COLOR_NOT_SELECTED	0x07
+#define MAX_PAGES	9
 
 typedef unsigned char byte;
 typedef unsigned short word;
@@ -43,18 +44,9 @@ void print_c(unsigned char __color, const char* __text);
 unsigned char locate(unsigned char __char, FILE *stream);
 char json_parse_reactions(const char* __filename, FILE *stream);
 
-unsigned int a;
-unsigned int b;
-char c;
-unsigned char d;
-
-/*This one for general porpouses*/
-char *str;
-/*We will use this str_ for mallocs*/
-char *str_;
-short *_nnum;
-unsigned char t;
-unsigned char g;
+/*Defined scales*/
+unsigned char cur_page = 0;
+unsigned char chem_per_page = 18;
 
 /*Data*/
 char json_reactions_data_name[27][255];
@@ -68,6 +60,19 @@ short *json_chemicals_data_temp_max;
 short *json_chemicals_data_temp_min;
 char *json_chemicals_data_state;
 short *json_chemicals_data_mass;
+
+/*Other variables*/
+/*This one for general porpouses*/
+char *str;
+/*We will use this str_ for mallocs*/
+char *str_;
+short *_nnum;
+unsigned char t;
+unsigned char g;
+unsigned int a;
+unsigned int b;
+char c;
+unsigned char d;
 
 union REGS regs;
 
@@ -370,9 +375,10 @@ int main(void)
 	t = getch();
 	printf("0x%x",t);
 	getch();
+	switch_mode(0x03);
 	for(;;)
 	{
-		switch_mode(0x03);
+		gotoxy(1,1);
 		printf("\xC9");
 		for(t = 0; t < TEXT_MODE_SCREEN_WIDTH-2; t++)
 		{
@@ -406,10 +412,12 @@ int main(void)
 		printf("\xB9");
 		if(menu_select == 1||menu_select == 2)
 		{
-			for(t = 0; t < 20; t++)
+			b = 0;
+			for(t = 0+(cur_page*chem_per_page); t < DATA_NUM_CHEMICALS-2; t++)
 			{
+				gotoxy(40,b+5);
 				cprintf("\xBA");
-				gotoxy(40,t+5);
+				gotoxy(42,b+5);
 				if(y_hover-2 != t)
 				{
 					textcolor(STYLE_COLOR_NOT_SELECTED);
@@ -437,16 +445,39 @@ int main(void)
 						}
 					}
 				}
+				if(t > chem_per_page+(cur_page*chem_per_page))
+				{
+					break;
+				}
+				b++;
 			}
 		}
-		for(t = 0; t < 20; t++)
+		for(t = 0; t < MAX_PAGES*2; t += 2)
 		{
-			gotoxy(79,t+5);
-			printf("\xB0\xBA");
+			gotoxy(79,(t/2)+5);
+			if(t/2 == cur_page)
+			{
+				printf("\xDB");
+				gotoxy(79,(t/2)+6);
+				printf("\xDB");
+			}
+			else
+			{
+				printf("\xB0");
+				gotoxy(79,(t/2)+6);
+				printf("\xB1");
+			}
+			printf("\xBA");
 		}
 		t = getch();
-		sound(t);
-		nosound();
+		if(t == 'N'||t == 'n')
+		{
+			cur_page++;
+		}
+		if(t == 'P'||t == 'p')
+		{
+			cur_page--;
+		}
 		if(t == 0)
 		{
 			t = getch();
@@ -469,6 +500,14 @@ int main(void)
 				y_hover--;
 			}
 		}
+		if(y_hover < cur_page*chem_per_page)
+		{
+			y_hover = (cur_page*chem_per_page)-(2);
+		}
+		if(cur_page > MAX_PAGES||cur_page < 0)
+		{
+			cur_page = 0;
+		}
 		if(menu_select < 1)
 		{
 			menu_select = 6;
@@ -480,6 +519,11 @@ int main(void)
 		if(t == 'X'||t == 'x')
 		{
 			return 0;
+		}
+		gotoxy(1,5);
+		for(b = 0; b < TEXT_MODE_SCREEN_WIDTH*40; b++)
+		{
+			printf(" ");
 		}
 	}
 }
