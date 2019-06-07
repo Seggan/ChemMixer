@@ -59,6 +59,7 @@ char json_reactions_data_reacts[27][24];
 short *json_reactions_data_temp_max;
 short *json_reactions_data_temp_min;
 char json_reactions_data_results[27][24];
+char *json_reactions_data_chemicals;
 
 char json_chemicals_data_name[27][255];
 short *json_chemicals_data_temp_max;
@@ -66,8 +67,8 @@ short *json_chemicals_data_temp_min;
 char *json_chemicals_data_state;
 short *json_chemicals_data_mass;
 
-signed short json_chemicals_game_usage[27];
-signed short game_baker_temperature;
+short json_chemicals_game_usage[27];
+short game_baker_temperature;
 
 const char delim[2] = ",";
 char *token;
@@ -162,7 +163,6 @@ char json_parse_chemicals(const char* __filename,FILE *stream)
 			}
 			a++;
 		}
-		printf("Chemical Name >> %s\n",str_);
 		for(b = 0; b < 255; b++)
 		{
 			json_chemicals_data_name[t][b] = str_[b];
@@ -170,11 +170,9 @@ char json_parse_chemicals(const char* __filename,FILE *stream)
 		locate(':',stream);
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[0]);
-		printf("Temp max >> %d\n",_nnum[0]);
 		json_chemicals_data_temp_max[t] = _nnum[0];
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[1]);
-		printf("Temp min >> %d\n",_nnum[1]);
 		json_chemicals_data_temp_min[t] = _nnum[1];
 		locate(':',stream);
 		locate('"',stream);
@@ -206,11 +204,9 @@ char json_parse_chemicals(const char* __filename,FILE *stream)
 			}
 			a++;
 		}
-		printf("State >> %d\n",_nnum[3]);
 		json_chemicals_data_state[t] = _nnum[3];
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[2]);
-		printf("Mass >> %d\n",_nnum[2]);
 		json_chemicals_data_mass[t] = _nnum[2];
 	}
 	free(str);
@@ -228,6 +224,9 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 	}
 	/*Get the reaction name*/
 	str = malloc(255);
+	json_chemicals_data_temp_max = malloc(DATA_NUM_REACTIONS);
+	json_chemicals_data_temp_min = malloc(DATA_NUM_REACTIONS);
+	json_reactions_data_chemicals = malloc(DATA_NUM_REACTIONS);
 	for(t = 0; t < DATA_NUM_REACTIONS; t++)
 	{
 		locate('"',stream);
@@ -273,17 +272,19 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 			}
 			a++;
 		}
+		json_reactions_data_chemicals[t] = 0;
 		token = strtok(str_,delim);
 		while(token != NULL)
 		{
-			printf("REACT %s",token);
+			printf("REACT %s ",token);
 			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
 			{
 				g = strcmp(token,json_chemicals_data_name[b]);
 				if(g == 0)
 				{
 					json_reactions_data_reacts[t][b]++;
-					printf(" Coincidence!\n");
+					json_reactions_data_chemicals[t]++;
+					printf("(%d)",json_reactions_data_reacts[t][b]);
 				}
 			}
 			token = strtok(NULL,delim);
@@ -291,10 +292,8 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		_nnum = malloc(3);
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[0]);
-		printf("Temp max >> %d\n",_nnum[0]);
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[1]);
-		printf("Temp min >> %d\n",_nnum[1]);
 		locate(':',stream);
 		locate('[',stream);
 		a = 0;
@@ -316,18 +315,21 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		token = strtok(str_,delim);
 		while(token != NULL)
 		{
-			printf("RESULTS %s",token);
+			printf("RESULTS %s ",token);
 			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
 			{
 				g = strcmp(token,json_chemicals_data_name[b]);
 				if(g == 0)
 				{
 					json_reactions_data_results[t][b]++;
-					printf(" Coincidence!\n");
 				}
 			}
 			token = strtok(NULL,delim);
 		}
+		json_chemicals_data_temp_max[t] = _nnum[0];
+		json_chemicals_data_temp_min[t] = _nnum[1];
+		printf(" Max temp: %d",json_chemicals_data_temp_max[t]);
+		printf(" Min temp: %d",json_chemicals_data_temp_min[t]);
 	}
 	free(str);
 	free(str_);
@@ -383,7 +385,6 @@ int main(void)
 	y_hover = 1;
 	switch_mode(0x03);
 	json_parse_chemicals("CHEMICALS.JSO",fp);
-	getch();
 	json_parse_reactions("REACT.JSO",fp);
 	getch();
 	textbackground(STYLE_BACK_SELECTED);
@@ -625,11 +626,11 @@ int main(void)
 				y_hover = 1;
 				menu_select--;
 			}
-			if(t == 0x50)
+			if(t == 0x50 && menu_select < 3)
 			{
 				y_hover++;
 			}
-			if(t == 0x48)
+			if(t == 0x48 && menu_select < 3)
 			{
 				y_hover--;
 			}
@@ -686,18 +687,23 @@ int main(void)
 		}
 		for(t = 0; t < DATA_NUM_REACTIONS; t++)
 		{
-			if(game_baker_temperature > json_chemicals_data_temp_min[t] && game_baker_temperature < json_chemicals_data_temp_max[t])
+			if(game_baker_temperature >= json_reactions_data_temp_min[t] && game_baker_temperature <= json_reactions_data_temp_max[t])
 			{
+				b = 0;
 				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
 				{
-					if(json_reactions_data_reacts[t][n] > 0 && json_chemicals_game_usage > 0)
+					if(json_reactions_data_reacts[t][n] > 0)
 					{
-						json_chemicals_game_usage[n] -= json_reactions_data_reacts[t][n];
+						if(json_chemicals_game_usage[n] >= json_reactions_data_reacts[t][n])
+						{
+							b++;
+							json_chemicals_game_usage[n] -= json_reactions_data_reacts[t][n];
+						}
 					}
 				}
 				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
-				{
-					if(json_reactions_data_results[t][n] > 0)
+				{				
+					if(json_reactions_data_results[t][n] > 0 && b == json_reactions_data_chemicals[t])
 					{
 						json_chemicals_game_usage[n] += json_reactions_data_results[t][n];
 					}
