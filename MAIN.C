@@ -26,11 +26,16 @@
 #include <dos.h>
 
 #define TEXT_MODE_SCREEN_WIDTH		80
-#define DATA_NUM_CHEMICALS		24
-#define DATA_NUM_REACTIONS		27
-#define STYLE_COLOR_SELECTED 		0xF0
-#define STYLE_COLOR_NOT_SELECTED	0x07
-#define MAX_PAGES	9
+#define DATA_NUM_CHEMICALS			24
+#define DATA_NUM_REACTIONS			27
+
+#define STYLE_COLOR_SELECTED 		0x0
+#define STYLE_BACK_SELECTED			0xF
+
+#define STYLE_COLOR_NOT_SELECTED	0x7
+#define STYLE_BACK_NOT_SELECTED		0x0
+
+#define MAX_PAGES	2
 
 typedef unsigned char byte;
 typedef unsigned short word;
@@ -46,7 +51,7 @@ char json_parse_reactions(const char* __filename, FILE *stream);
 
 /*Defined scales*/
 unsigned char cur_page = 0;
-unsigned char chem_per_page = 18;
+unsigned char chem_per_page = 24;
 
 /*Data*/
 char json_reactions_data_name[27][255];
@@ -60,6 +65,12 @@ short *json_chemicals_data_temp_max;
 short *json_chemicals_data_temp_min;
 char *json_chemicals_data_state;
 short *json_chemicals_data_mass;
+
+signed short json_chemicals_game_usage[27];
+signed short game_baker_temperature;
+
+const char delim[2] = ",";
+char *token;
 
 /*Other variables*/
 /*This one for general porpouses*/
@@ -236,50 +247,46 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 			}
 			a++;
 		}
-		printf("React Name >> %s\n",str);
 		memcpy(json_reactions_data_name[t],str,strlen(str)+1);
+		printf("\nReact Name >> %s\n",json_reactions_data_name[t]);
+		locate(':',stream);
 		locate('[',stream);
 		str_ = malloc(512);
 		a = 0;
 		for(;;)
 		{
-			printf(" (%s) \n",str_);
-			str_[a] = fgetc(stream);
 			if(str_[a] == ']')
 			{
 				str_[a] = 0;
 				break;
 			}
+			if(str_[a-1] == ']')
+			{
+				str_[a-1] = 0;
+				break;
+			}
+			str_[a] = fgetc(stream);
 			if(str_[a] == '"')
 			{
 				str_[a] = 0;
 				a--;
 			}
-			if(str_[a] == ',')
-			{
-				str_[a] = 0;
-				for(b = 0; b < DATA_NUM_CHEMICALS; b++)
-				{
-					g = strcmp(str_,json_chemicals_data_name[b]);
-					if(g == 0)
-					{
-						json_reactions_data_reacts[t][b]++;
-					}
-				}
-				for(b = 0; b < 512; b++)
-				{
-					str_[b] = 0;
-				}
-				a = -1;
-			}
 			a++;
 		}
-		for(b = 0; b < DATA_NUM_CHEMICALS; b++)
+		token = strtok(str_,delim);
+		while(token != NULL)
 		{
-			if(json_reactions_data_reacts[t][b] > 0)
+			printf("REACT %s",token);
+			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
 			{
-				printf("Reacting with %s\n",json_chemicals_data_name[b]);
+				g = strcmp(token,json_chemicals_data_name[b]);
+				if(g == 0)
+				{
+					json_reactions_data_reacts[t][b]++;
+					printf(" Coincidence!\n");
+				}
 			}
+			token = strtok(NULL,delim);
 		}
 		_nnum = malloc(3);
 		locate(':',stream);
@@ -288,20 +295,16 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[1]);
 		printf("Temp min >> %d\n",_nnum[1]);
+		locate(':',stream);
 		locate('[',stream);
 		a = 0;
 		for(;;)
 		{
 			str_[a] = fgetc(stream);
-			if(str_[a] == ']')
+			if(str_[a] == ']'||str_[a-1] == ']')
 			{
 				str_[a] = 0;
 				break;
-			}
-			if(str_[a] == 0)
-			{
-				printf("End of file");
-				return -1;
 			}
 			if(str_[a] == '"')
 			{
@@ -310,7 +313,21 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 			}
 			a++;
 		}
-		printf("Results >> %s\n",str_);
+		token = strtok(str_,delim);
+		while(token != NULL)
+		{
+			printf("RESULTS %s",token);
+			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
+			{
+				g = strcmp(token,json_chemicals_data_name[b]);
+				if(g == 0)
+				{
+					json_reactions_data_results[t][b]++;
+					printf(" Coincidence!\n");
+				}
+			}
+			token = strtok(NULL,delim);
+		}
 	}
 	free(str);
 	free(str_);
@@ -350,7 +367,10 @@ const char* string[32] =
 	"Mass:",
 	"Name:",
 	"ID:",
-	"Included in:"
+	"Reacts in:",
+	"Quantity in baker:",
+	"Results in:",
+	"Press D to change temperature, then input the desired temperature:"
 };
 
 unsigned char menu_select;
@@ -366,6 +386,7 @@ int main(void)
 	getch();
 	json_parse_reactions("REACT.JSO",fp);
 	getch();
+	textbackground(STYLE_BACK_SELECTED);
 	textcolor(STYLE_COLOR_SELECTED);
 	for(t = 30; t < 255; t++)
 	{
@@ -394,11 +415,13 @@ int main(void)
 			printf(" ");
 			if(menu_select == t+1 && y_hover == 1)
 			{
+				textbackground(STYLE_BACK_SELECTED);
 				textcolor(STYLE_COLOR_SELECTED);
 				cprintf(string[t]);
 			}
 			else
 			{
+				textbackground(STYLE_BACK_NOT_SELECTED);
 				textcolor(STYLE_COLOR_NOT_SELECTED);
 				cprintf(string[t]);
 			}
@@ -412,6 +435,73 @@ int main(void)
 		printf("\xB9");
 		if(menu_select == 1||menu_select == 2)
 		{
+			for(n = 0; n < DATA_NUM_CHEMICALS;n += 2)
+			{
+				if(y_hover-2 == n)
+				{
+					textbackground(STYLE_BACK_SELECTED);
+					textcolor(STYLE_COLOR_SELECTED);
+					gotoxy(1,(n/2)+5);
+					cprintf("\xBA \x3E %s (%d)",json_chemicals_data_name[n],json_chemicals_game_usage[n]);
+				}
+				else
+				{
+					textbackground(STYLE_BACK_NOT_SELECTED);
+					textcolor(STYLE_COLOR_NOT_SELECTED);
+					gotoxy(1,(n/2)+5);
+					cprintf("\xBA %s (%d)",json_chemicals_data_name[n],json_chemicals_game_usage[n]);
+				}
+				if(json_chemicals_data_state[n] == 1)
+				{
+					cprintf(" (\xB0)");
+				}
+				if(json_chemicals_data_state[n] == 2)
+				{
+					cprintf(" (\xDB)");
+				}
+				if(json_chemicals_data_state[n] == 3)
+				{
+					cprintf(" (\xB1)");
+				}
+				if(json_chemicals_data_state[n] != 3&&json_chemicals_data_state[n] != 2&&json_chemicals_data_state[n] != 1)
+				{
+					cprintf(" (?)");
+				}
+				if(y_hover-2 == n+1)
+				{
+					textbackground(STYLE_BACK_SELECTED);
+					textcolor(STYLE_COLOR_SELECTED);
+					gotoxy(40,(n/2)+5);
+					cprintf("\xBA \x3E %s (%d)",json_chemicals_data_name[n+1],json_chemicals_game_usage[n+1]);
+				}
+				else
+				{
+					textbackground(STYLE_BACK_NOT_SELECTED);
+					textcolor(STYLE_COLOR_NOT_SELECTED);
+					gotoxy(40,(n/2)+5);
+					cprintf("\xBA %s (%d)",json_chemicals_data_name[n+1],json_chemicals_game_usage[n+1]);
+				}
+				if(json_chemicals_data_state[n+1] == 1)
+				{
+					cprintf(" (\xB0)");
+				}
+				if(json_chemicals_data_state[n+1] == 2)
+				{
+					cprintf(" (\xDB)");
+				}
+				if(json_chemicals_data_state[n+1] == 3)
+				{
+					cprintf(" (\xB1)");
+				}
+				if(json_chemicals_data_state[n+1] != 3&&json_chemicals_data_state[n+1] != 2&&json_chemicals_data_state[n+1] != 1)
+				{
+					cprintf(" (?)");
+				}
+			}
+		}
+		/*
+		if(menu_select == 1||menu_select == 2)
+		{
 			b = 0;
 			for(t = 0+(cur_page*chem_per_page); t < DATA_NUM_CHEMICALS-2; t++)
 			{
@@ -420,13 +510,16 @@ int main(void)
 				gotoxy(42,b+5);
 				if(y_hover-2 != t)
 				{
+					textbackground(STYLE_BACK_NOT_SELECTED);
 					textcolor(STYLE_COLOR_NOT_SELECTED);
 					cprintf(" %s",json_chemicals_data_name[t]);
 				}
 				else
 				{
+					textbackground(STYLE_BACK_SELECTED);
 					textcolor(STYLE_COLOR_SELECTED);
 					cprintf(" %s",json_chemicals_data_name[t]);
+					textbackground(STYLE_BACK_NOT_SELECTED);
 					textcolor(STYLE_COLOR_NOT_SELECTED);
 					gotoxy(1,5);
 					cprintf("\xBA %s %s",string[22],json_chemicals_data_name[t]);
@@ -434,14 +527,25 @@ int main(void)
 					cprintf("\xBA %s %d",string[21],json_chemicals_data_mass[t]);
 					gotoxy(1,7);
 					cprintf("\xBA %s %d",string[23],t);
+					gotoxy(1,8);
+					cprintf("\xBA %s %d",string[25],json_chemicals_game_usage[t]);
 					a = 0;
 					for(n = 0; n < DATA_NUM_REACTIONS;n++)
 					{
 						if(json_reactions_data_reacts[n][t] > 0)
 						{
+							gotoxy(1,a+9);
+							cprintf("\xBA %s %s",string[24],json_reactions_data_name[n]);
 							a++;
-							gotoxy(1,a+8);
-							cprintf("\xBA As reactant in: %s",json_reactions_data_name[n]);
+						}
+					}
+					for(n = 0; n < DATA_NUM_REACTIONS;n++)
+					{
+						if(json_reactions_data_results[n][t] > 0)
+						{
+							gotoxy(1,a+9);
+							cprintf("\xBA %s %s",string[26],json_reactions_data_name[n]);
+							a++;
 						}
 					}
 				}
@@ -450,26 +554,55 @@ int main(void)
 					break;
 				}
 				b++;
+				if(b > 40)
+				{
+					b = 0;
+				}
 			}
 		}
-		for(t = 0; t < MAX_PAGES*2; t += 2)
+		*/
+		for(t = 0; t < 20; t++)
 		{
-			gotoxy(79,(t/2)+5);
-			if(t/2 == cur_page)
+			gotoxy(TEXT_MODE_SCREEN_WIDTH,t+5);
+			cprintf("\xBA");
+		}
+		for(t = 0; t < 20; t++)
+		{
+			gotoxy(1,t+5);
+			cprintf("\xBA");
+		}
+		if(menu_select == 3)
+		{
+			gotoxy(1,5);
+			cprintf("\xBA %s",string[27]);
+		}
+		if(menu_select == 4)
+		{
+			gotoxy(1,5);
+			cprintf("\xBA %s",string[6]);
+			gotoxy(1,6);
+			cprintf("\xBA %s %d",string[7],game_baker_temperature);
+			gotoxy(1,7);
+			cprintf("\xBA %s",string[8]);
+			gotoxy(1,8);
+			printf("\xCC");
+			for(t = 0; t < TEXT_MODE_SCREEN_WIDTH-2; t++)
 			{
-				printf("\xDB");
-				gotoxy(79,(t/2)+6);
-				printf("\xDB");
+				printf("\xCD");
 			}
-			else
+			printf("\xB9");
+			a = 0;
+			for(n = 0; n < DATA_NUM_CHEMICALS;n += 2)
 			{
-				printf("\xB0");
-				gotoxy(79,(t/2)+6);
-				printf("\xB1");
+				gotoxy(1,(a/2)+9);
+				cprintf("\xBA %s (%d)",json_chemicals_data_name[n],json_chemicals_game_usage[n]);
+				gotoxy(40,(a/2)+9);
+				cprintf("\xBA %s (%d)",json_chemicals_data_name[n+1],json_chemicals_game_usage[n+1]);
+				a += 2;
 			}
-			printf("\xBA");
 		}
 		t = getch();
+		/*
 		if(t == 'N'||t == 'n')
 		{
 			cur_page++;
@@ -478,6 +611,7 @@ int main(void)
 		{
 			cur_page--;
 		}
+		*/
 		if(t == 0)
 		{
 			t = getch();
@@ -500,6 +634,35 @@ int main(void)
 				y_hover--;
 			}
 		}
+		if(menu_select == 1||menu_select == 2)
+		{
+			if(t == 'D'||t == 'd')
+			{
+				for(b = 0+(cur_page*chem_per_page); b < DATA_NUM_CHEMICALS-2; b++)
+				{
+					if(y_hover-2 == b)
+					{
+						if(menu_select == 2)
+						{
+							json_chemicals_game_usage[b]--;
+						}
+						if(menu_select == 1)
+						{
+							json_chemicals_game_usage[b]++;
+						}
+					}
+				}
+			}
+		}
+		if(menu_select == 3)
+		{
+			if(t == 'D'||t == 'd')
+			{
+				gotoxy(strlen(string[27])+3,5);
+				scanf("%i",&game_baker_temperature);
+			}
+		}
+		/*
 		if(y_hover < cur_page*chem_per_page)
 		{
 			y_hover = (cur_page*chem_per_page)-(2);
@@ -508,6 +671,7 @@ int main(void)
 		{
 			cur_page = 0;
 		}
+		*/
 		if(menu_select < 1)
 		{
 			menu_select = 6;
@@ -519,6 +683,45 @@ int main(void)
 		if(t == 'X'||t == 'x')
 		{
 			return 0;
+		}
+		for(t = 0; t < DATA_NUM_REACTIONS; t++)
+		{
+			if(game_baker_temperature > json_chemicals_data_temp_min[t] && game_baker_temperature < json_chemicals_data_temp_max[t])
+			{
+				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
+				{
+					if(json_reactions_data_reacts[t][n] > 0 && json_chemicals_game_usage > 0)
+					{
+						json_chemicals_game_usage[n] -= json_reactions_data_reacts[t][n];
+					}
+				}
+				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
+				{
+					if(json_reactions_data_results[t][n] > 0)
+					{
+						json_chemicals_game_usage[n] += json_reactions_data_results[t][n];
+					}
+				}
+			}
+		}
+		for(t = 0; t < DATA_NUM_CHEMICALS; t++)
+		{
+			if(game_baker_temperature > json_chemicals_data_temp_max[t])
+			{
+				json_chemicals_data_state[t] = 1;
+			}
+			if(game_baker_temperature < json_chemicals_data_temp_min[t])
+			{
+				json_chemicals_data_state[t] = 2;
+			}
+			if(game_baker_temperature < json_chemicals_data_temp_min[t] && game_baker_temperature > json_chemicals_data_temp_max[t])
+			{
+				json_chemicals_data_state[t] = 3;
+			}
+			if(json_chemicals_game_usage[t] < 0)
+			{
+				json_chemicals_game_usage[t] = 0;
+			}
 		}
 		gotoxy(1,5);
 		for(b = 0; b < TEXT_MODE_SCREEN_WIDTH*40; b++)
