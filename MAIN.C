@@ -276,7 +276,6 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		token = strtok(str_,delim);
 		while(token != NULL)
 		{
-			printf("REACT %s ",token);
 			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
 			{
 				g = strcmp(token,json_chemicals_data_name[b]);
@@ -284,11 +283,13 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 				{
 					json_reactions_data_reacts[t][b]++;
 					json_reactions_data_chemicals[t]++;
-					printf("(%d)",json_reactions_data_reacts[t][b]);
+					printf("REACT %s ",json_chemicals_data_name[b]);
+					printf("as (%d) in chemical count\n",json_reactions_data_chemicals[t]);
 				}
 			}
 			token = strtok(NULL,delim);
 		}
+		printf("Total chemicals: (%d)\n",json_reactions_data_chemicals[t]);
 		_nnum = malloc(3);
 		locate(':',stream);
 		fscanf(stream,"%d",&_nnum[0]);
@@ -315,7 +316,6 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		token = strtok(str_,delim);
 		while(token != NULL)
 		{
-			printf("RESULTS %s ",token);
 			for(b = 0; b < DATA_NUM_CHEMICALS; b++)
 			{
 				g = strcmp(token,json_chemicals_data_name[b]);
@@ -328,8 +328,6 @@ char json_parse_reactions(const char* __filename,FILE *stream)
 		}
 		json_chemicals_data_temp_max[t] = _nnum[0];
 		json_chemicals_data_temp_min[t] = _nnum[1];
-		printf(" Max temp: %d",json_chemicals_data_temp_max[t]);
-		printf(" Min temp: %d",json_chemicals_data_temp_min[t]);
 	}
 	free(str);
 	free(str_);
@@ -687,26 +685,48 @@ int main(void)
 		}
 		for(t = 0; t < DATA_NUM_REACTIONS; t++)
 		{
-			if(game_baker_temperature >= json_reactions_data_temp_min[t] && game_baker_temperature <= json_reactions_data_temp_max[t])
+			b = 0;
+			if(game_baker_temperature > json_reactions_data_temp_min[t] && game_baker_temperature < json_reactions_data_temp_max[t])
 			{
-				b = 0;
 				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
 				{
-					if(json_reactions_data_reacts[t][n] > 0)
+					if(json_reactions_data_reacts[t][n] > 0 && json_chemicals_game_usage[n] > json_reactions_data_reacts[t][n])
 					{
-						if(json_chemicals_game_usage[n] >= json_reactions_data_reacts[t][n])
+						b++;
+					}
+					else
+					{
+						/*Nothing*/
+					}
+				}
+				if(b == json_reactions_data_chemicals[t])
+				{
+					for(a = 0; a < DATA_NUM_CHEMICALS;a++)
+					{
+						if(json_reactions_data_results[t][a] > 0)
 						{
-							b++;
-							json_chemicals_game_usage[n] -= json_reactions_data_reacts[t][n];
+							json_chemicals_game_usage[a] += json_reactions_data_results[t][a];
+						}
+						else
+						{
+							/*Nothing*/
+						}
+					}
+					for(a = 0; a < DATA_NUM_CHEMICALS;a++)
+					{
+						if(json_reactions_data_reacts[t][a] > 0)
+						{
+							json_chemicals_game_usage[a] += json_reactions_data_reacts[t][a];
+						}
+						else
+						{
+							/*Nothing*/
 						}
 					}
 				}
-				for(n = 0; n < DATA_NUM_CHEMICALS;n++)
-				{				
-					if(json_reactions_data_results[t][n] > 0 && b == json_reactions_data_chemicals[t])
-					{
-						json_chemicals_game_usage[n] += json_reactions_data_results[t][n];
-					}
+				else
+				{
+					/*Do absolutely nothing*/
 				}
 			}
 		}
