@@ -26,6 +26,18 @@ and lower than 3501.''')
 
         self.okbutton=Button(self.error, text="OK", command=lambda:self.error.destroy())
         self.okbutton.pack(side=TOP)
+class AmountError(Frame):
+    def __init__(self):
+        self.error=Tk()
+        super().__init__(self.error)
+        self.error.title("Error")
+
+        self.errortext=Label(self.error, text='''The beaker is too full.
+Try removing some stuff.''')
+        self.errortext.pack(side=TOP)
+
+        self.okbutton=Button(self.error, text="OK", command=lambda:self.error.destroy())
+        self.okbutton.pack(side=TOP)
 class GUI(Frame):
     """The window for the game"""
     def __init__(self, master, temp, chem):
@@ -40,7 +52,10 @@ class GUI(Frame):
     def init_widgets(self, temp, chem):
         self.img=PhotoImage(file="Logo.png")
         self.imglbl=Label(self.master, image=self.img)
-        self.imglbl.pack(side=TOP)
+        self.imglbl.pack(side=LEFT)
+        
+        self.imglbl2=Label(self.master, image=self.img)
+        self.imglbl2.pack(side=RIGHT)
         
         self.menubar=Menu(self.master)
         
@@ -56,7 +71,7 @@ class GUI(Frame):
         for category in self.catdict.keys():
             for chemical in chem.keys():
                 if chem[chemical]["parent"]==category.lower():
-                    self.catdict[category].add_command(label=chemical, command=lambda c=chemical:beaker.add(c))
+                    self.catdict[category].add_command(label=chemical, command=lambda c=chemical:self.add(c))
             self.add.add_cascade(label=category, menu=self.catdict[category])
         
         self.menubar.add_cascade(label="Add", menu=self.add)
@@ -71,7 +86,7 @@ class GUI(Frame):
         self.others=Menu(self.menubar)
         self.others.add_command(label="Change Temperature", command=lambda:self.create_temp_win())
         self.others.add_command(label="Empty the Beaker", command=lambda:beaker.reset())
-        self.others.add_command(label="Credits", command=lambda:self.credits())
+##        self.others.add_command(label="Credits", command=lambda:self.credits())
         self.others.add_command(label="Exit", command=lambda:root.destroy())
         self.menubar.add_cascade(label="Other Commands", menu=self.others)
 
@@ -99,6 +114,8 @@ class GUI(Frame):
         self.cmds_in_remove=beaker.contents
         for chem in self.cmds_in_remove:
             self.remove.add_command(label=chem, command=lambda n=chem:beaker.extract(n))
+        self.imglbl.pack(side=LEFT)
+        self.imglbl2.pack(side=RIGHT)
     def credits(self):
         self.creds=Tk()
         self.creds.title("Credits")
@@ -153,6 +170,11 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
             dump(c, f, indent=4)
         with open('reactions.json', 'w') as f:
             dump(r, f, indent=4)
+    def add(self, chem):
+        if len(beaker.contents)>100:
+            AmountError()
+        else:
+            beaker.add(chem)
             
 
 with open("chemicals.json",'r') as r:
@@ -162,7 +184,7 @@ temperature=20
 beaker=Beaker(chemdict)
 root=Tk()
 root.geometry("1000x700")
-root.title("ChemMixer 0.4.1")
+root.title("ChemMixer 4.0.0")
 gui=GUI(root, temperature, chemdict)
 #A try-except to catch an error when exiting
 while True:
