@@ -15,7 +15,7 @@ def sublist(child, parent):
     child_dict={entry:amount(entry, child) for entry in child}
     for entry in child_dict.keys():
         if entry in parent_dict.keys():
-            if child_dict[entry]!=parent_dict[entry]:
+            if child_dict[entry]<parent_dict[entry]:
                 return False
         else:
             return False
