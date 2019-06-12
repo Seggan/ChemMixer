@@ -71,7 +71,7 @@ class GUI(Frame):
         for category in self.catdict.keys():
             for chemical in chem.keys():
                 if chem[chemical]["parent"]==category.lower():
-                    self.catdict[category].add_command(label=chemical, command=lambda c=chemical:self.add(c))
+                    self.catdict[category].add_command(label=chemical, command=lambda c=chemical:beaker.add(c))
             self.add.add_cascade(label=category, menu=self.catdict[category])
         
         self.menubar.add_cascade(label="Add", menu=self.add)
@@ -86,7 +86,7 @@ class GUI(Frame):
         self.others=Menu(self.menubar)
         self.others.add_command(label="Change Temperature", command=lambda:self.create_temp_win())
         self.others.add_command(label="Empty the Beaker", command=lambda:beaker.reset())
-##        self.others.add_command(label="Credits", command=lambda:self.credits())
+        self.others.add_command(label="Credits", command=lambda:self.credits())
         self.others.add_command(label="Exit", command=lambda:root.destroy())
         self.menubar.add_cascade(label="Other Commands", menu=self.others)
 
@@ -170,11 +170,11 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
             dump(c, f, indent=4)
         with open('reactions.json', 'w') as f:
             dump(r, f, indent=4)
-    def add(self, chem):
+    """def add(self, chem):
         if len(beaker.contents)>100:
             AmountError()
         else:
-            beaker.add(chem)
+            beaker.add(chem)"""
             
 
 with open("chemicals.json",'r') as r:
