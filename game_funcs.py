@@ -89,6 +89,11 @@ following chemicals inside:'''
                 accounted.append(chemical)
         return txt
 
+    def refresh(self):
+        from json import load
+        with open("reactions.json", 'r') as r:
+            self.reactions = load(r)
+
 
 def change_states(temp, chemdict, contents):
     for chemical in chemdict.keys():
@@ -100,3 +105,37 @@ def change_states(temp, chemdict, contents):
                 chemdict[chemical]["state"] = "liquid"
             if temp >= chemdict[chemical]["boiling_point"]:
                 chemdict[chemical]["state"] = "gaseous"
+
+
+def mod_load(mod):
+    import os
+    from json import load, dump
+    with open(os.path.join(os.getcwd(), 'Mods', mod + '.json'), 'r') as f:
+        d = load(f)
+    with open('chemicals.json', 'r') as f:
+        c = load(f)
+    with open('reactions.json', 'r') as f:
+        r = load(f)
+    c.update(d["chemicals"])
+    r.update(d["reactions"])
+    with open('chemicals.json', 'w') as f:
+        dump(c, f, indent=4)
+    with open('reactions.json', 'w') as f:
+        dump(r, f, indent=4)
+
+
+def mod_unload(mod):
+    import os
+    from json import load, dump
+    with open(os.path.join(os.getcwd(), 'Mods', mod + '.json'), 'r') as f:
+        d = load(f)
+    with open('chemicals.json', 'r') as f:
+        c = load(f)
+    with open('reactions.json', 'r') as f:
+        r = load(f)
+    c = dict_reduce(c, d["chemicals"])
+    r = dict_reduce(r, d["reactions"])
+    with open('chemicals.json', 'w') as f:
+        dump(c, f, indent=4)
+    with open('reactions.json', 'w') as f:
+        dump(r, f, indent=4)

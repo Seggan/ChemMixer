@@ -16,11 +16,10 @@ def cap_first_letter(word):
     return word2
 
 
-class Error(Frame):
+class Error:
     def __init__(self, txt):
         self.error = Tk()
-        super().__init__(self.error)
-        self.error.title("Error")
+        self.error.title('')
 
         self.errortext = Label(self.error, text=txt)
         self.errortext.pack(side=TOP)
@@ -29,11 +28,11 @@ class Error(Frame):
         self.okbutton.pack(side=TOP)
 
 
-class GUI(Frame):
+class GUI:
     """The window for the game"""
 
     def __init__(self, master, temp, chem):
-        super().__init__(master)
+        """Initializes the main parts; GUI().init_widgets() initialises the widgets"""
         self.master = master
         self.mods_in_mods = list()
         self.mod_menu = list()
@@ -43,6 +42,7 @@ class GUI(Frame):
         self.init_widgets(temp, chem)
 
     def init_widgets(self, temp, chem):
+        """Creates all the widgets for the window"""
         self.img = PhotoImage(file="Logo.png")
         self.imglbl = Label(self.master, image=self.img)
         self.imglbl.pack(side=LEFT)
@@ -79,7 +79,7 @@ class GUI(Frame):
         self.others = Menu(self.menubar)
         self.others.add_command(label="Change Temperature", command=lambda: self.create_temp_win())
         self.others.add_command(label="Empty the Beaker", command=lambda: beaker.reset())
-        #        self.others.add_command(label="Credits", command=lambda:self.credits())
+        # self.others.add_command(label="Credits", command=lambda:self.credits())
         self.others.add_command(label="Exit", command=lambda: root.destroy())
         self.menubar.add_cascade(label="Other Commands", menu=self.others)
 
@@ -99,7 +99,8 @@ class GUI(Frame):
 
         root.config(menu=self.menubar)
 
-    def update_contents(self, temp, chem):
+    def update(self, temp, chem):
+        """Updates (almost) everything"""
         beaker.react(temperature, chemdict)
         change_states(temp, chem, beaker.contents)
         self.text = beaker.show_contents(temp, chem)
@@ -109,10 +110,11 @@ class GUI(Frame):
         self.cmds_in_remove = beaker.contents
         for chem in self.cmds_in_remove:
             self.remove.add_command(label=chem, command=lambda n=chem: beaker.extract(n))
-        self.imglbl.pack(side=LEFT)
-        self.imglbl2.pack(side=RIGHT)
+        """self.imglbl.pack(side=LEFT)
+        self.imglbl2.pack(side=RIGHT)"""
 
     def credits(self):
+        """Creates the credits window"""
         self.creds = Tk()
         self.creds.title("Credits")
         self.credit_text = Label(self.creds, text='''
@@ -123,6 +125,7 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
         self.credit_text.pack()
 
     def create_temp_win(self):
+        """Creates the window for inputting the temperature"""
         self.tempinput = Tk()
         self.tempinput.title("Change the Temperature")
 
@@ -136,7 +139,11 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
         self.okbutton.pack(side=TOP)
 
     def change_temp(self):
-        self.temp = int(self.tempentry.get())
+        """Checks the user temperature input"""
+        try:
+            self.temp = int(self.tempentry.get())
+        except ValueError:
+            Error('''Please enter a number.''')
         self.tempinput.destroy()
         beaker.react(temperature, chemdict)
         if self.temp < -273 or self.temp > 3500:
@@ -145,32 +152,35 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
              -274 and lower than 3501.''')
 
     def mod_load(self, mod):
-        with open(os.path.join(os.getcwd(), 'Mods', mod + '.json'), 'r') as f:
-            d = load(f)
-        with open('chemicals.json', 'r') as f:
-            c = load(f)
-        with open('reactions.json', 'r') as f:
-            r = load(f)
-        c.update(d["chemicals"])
-        r.update(d["reactions"])
-        with open('chemicals.json', 'w') as f:
-            dump(c, f, indent=4)
-        with open('reactions.json', 'w') as f:
-            dump(r, f, indent=4)
+        """Really just a combo of functions that loads a mod; does not load them"""
+        mod_load(mod)
+        self.refresh()
+        beaker.refresh()
 
     def mod_unload(self, mod):
-        with open(os.path.join(os.getcwd(), 'Mods', mod + '.json'), 'r') as f:
-            d = load(f)
-        with open('chemicals.json', 'r') as f:
-            c = load(f)
-        with open('reactions.json', 'r') as f:
-            r = load(f)
-        c = dict_reduce(c, d["chemicals"])
-        r = dict_reduce(r, d["reactions"])
-        with open('chemicals.json', 'w') as f:
-            dump(c, f, indent=4)
-        with open('reactions.json', 'w') as f:
-            dump(r, f, indent=4)
+        """Really just a combo of functions that unloads a mod; does not unload them"""
+        mod_unload(mod)
+        self.refresh()
+        beaker.refresh()
+
+    def refresh(self):
+        """Refreshes the "add" menu"""
+        self.add = Menu(self.menubar)
+        self.catdict = dict()
+        self.categories = list(set([cap_first_letter(chemdict[chemical]["parent"]) for chemical in chemdict.keys()]))
+        self.categories.remove('Elements')
+        self.categories.insert(0, 'Elements')
+        self.categories.remove('Uncategorized')
+        self.categories.append('Uncategorized')
+        for category in self.categories:
+            self.catdict[category] = Menu(self.add)
+        for category in self.catdict.keys():
+            for chemical in chemdict.keys():
+                if chemdict[chemical]["parent"] == category.lower():
+                    self.catdict[category].add_command(label=chemical, command=lambda c=chemical: beaker.add(c))
+            self.add.add_cascade(label=category, menu=self.catdict[category])
+
+        self.menubar.add_cascade(label="Add", menu=self.add)
 
 
 with open("chemicals.json", 'r') as r:
@@ -185,11 +195,14 @@ gui = GUI(root, temperature, chemdict)
 # A try-except to catch an error when exiting
 while True:
     try:
-        gui.update_contents(temperature, chemdict)
+        gui.update(temperature, chemdict)
         temperature = gui.temp
         root.update()
     except Exception as e:
         if str(e) == 'invalid command name ".!label3"':
             sys.exit()
         else:
+            root.destroy()
             print("Error:", e)
+            while True:
+                pass

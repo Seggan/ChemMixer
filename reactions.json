@@ -1,438 +1,438 @@
 {
-  "(nh3)2so4": {
-    "reactants": [
-      "ammonium sulfate"
-    ],
-    "temp max": 3500,
-    "temp min": 250,
-    "results": [
-      "sulfur dioxide",
-      "ammonia",
-      "oxygen"
-    ]
-  },
-  "h2o2": {
-    "reactants": [
-      "hydrogen peroxide"
-    ],
-    "temp max": 3500,
-    "temp min": 160,
-    "results": [
-      "water",
-      "oxygen"
-    ]
-  },
-  "he2": {
-    "reactants": [
-      "dihelium"
-    ],
-    "temp max": 3500,
-    "temp min": -250,
-    "results": [
-      "helium",
-      "helium"
-    ]
-  },
-  "nh3oh": {
-    "reactants": [
-      "ammonium hydroxide"
-    ],
-    "temp max": 3500,
-    "temp min": 37,
-    "results": [
-      "water",
-      "ammonia"
-    ]
-  },
-  "h2+o2": {
-    "reactants": [
-      "oxygen",
-      "hydrogen",
-      "hydrogen"
-    ],
-    "temp max": 1070,
-    "temp min": 999,
-    "results": [
-      "water"
-    ]
-  },
-  "hcl+nh3oh": {
-    "reactants": [
-      "hydrochloric acid",
-      "ammonium hydroxide"
-    ],
-    "temp max": 3500,
-    "temp min": -43,
-    "results": [
-      "ammonium chloride",
-      "water"
-    ]
-  },
-  "h2so4+nh3oh": {
-    "reactants": [
-      "sulfuric acid",
-      "ammonium hydroxide"
-    ],
-    "temp max": 3500,
-    "temp min": -43,
-    "results": [
-      "ammonium sulfate",
-      "water"
-    ]
-  },
-  "s+o2": {
-    "reactants": [
-      "sulfur",
-      "oxygen"
-    ],
-    "temp max": 1070,
-    "temp min": 999,
-    "results": [
-      "sulfur dioxide"
-    ]
-  },
-  "so2+h2o": {
-    "reactants": [
-      "sulfur dioxide",
-      "water"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "sulfuric acid"
-    ]
-  },
-  "h2so4+nh3cl": {
-    "reactants": [
-      "sulfuric acid",
-      "ammonium chloride",
-      "ammonium chloride"
-    ],
-    "temp max": 3500,
-    "temp min": -43,
-    "results": [
-      "ammonium sulfate",
-      "chlorine"
-    ]
-  },
-  "h2so4+nh3": {
-    "reactants": [
-      "sulfuric acid",
-      "ammonia",
-      "ammonia"
-    ],
-    "temp max": 3500,
-    "temp min": -43,
-    "results": [
-      "ammonium sulfate",
-      "hydrogen"
-    ]
-  },
-  "cloh+nh3oh": {
-    "reactants": [
-      "hypochlorous acid",
-      "ammonium hydroxide"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "chloramine",
-      "hydrogen peroxide"
-    ]
-  },
-  "cloh+nh3": {
-    "reactants": [
-      "hypochlorous acid",
-      "ammonia"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "chloramine",
-      "water"
-    ]
-  },
-  "hcl+nh3": {
-    "reactants": [
-      "hydrochloric acid",
-      "ammonia"
-    ],
-    "temp max": 3500,
-    "temp min": -43,
-    "results": [
-      "ammonium chloride"
-    ]
-  },
-  "o2+o2": {
-    "reactants": [
-      "oxygen",
-      "oxygen"
-    ],
-    "temp max": 1070,
-    "temp min": 999,
-    "results": [
-      "ozone"
-    ]
-  },
-  "he+he": {
-    "reactants": [
-      "helium",
-      "helium"
-    ],
-    "temp max": -250,
-    "temp min": -273,
-    "results": [
-      "dihelium"
-    ]
-  },
-  "o3+h2": {
-    "reactants": [
-      "ozone",
-      "hydrogen"
-    ],
-    "temp max": 159,
-    "temp min": 149,
-    "results": [
-      "water",
-      "oxygen"
-    ]
-  },
-  "n2+h2": {
-    "reactants": [
-      "hydrogen",
-      "hydrogen",
-      "nitrogen"
-    ],
-    "temp max": 3500,
-    "temp min": 449,
-    "results": [
-      "ammonia"
-    ]
-  },
-  "o3+h2o": {
-    "reactants": [
-      "ozone",
-      "water"
-    ],
-    "temp max": 3500,
-    "temp min": 99,
-    "results": [
-      "hydrogen peroxide",
-      "oxygen"
-    ]
-  },
-  "cl2+h2o": {
-    "reactants": [
-      "chlorine",
-      "water"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "hypochlorous acid",
-      "hydrochloric acid"
-    ]
-  },
-  "cl2+h2o2": {
-    "reactants": [
-      "chlorine",
-      "hydrogen peroxide"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "hypochlorous acid",
-      "hypochlorous acid"
-    ]
-  },
-  "nh3+h2o": {
-    "reactants": [
-      "water",
-      "ammonia"
-    ],
-    "temp max": 37,
-    "temp min": -273,
-    "results": [
-      "ammonium hydroxide",
-      "water"
-    ]
-  },
-  "al+hcl": {
-    "reactants": [
-      "hydrochloric acid",
-      "hydrochloric acid",
-      "hydrochloric acid",
-      "aluminum"
-    ],
-    "temp max": 3500,
-    "temp min": -44,
-    "results": [
-      "aluminum chloride",
-      "hydrogen"
-    ]
-  },
-  "al(cl)3+h2o": {
-    "reactants": [
-      "water",
-      "water",
-      "water",
-      "aluminum chloride"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "aluminum hydroxide",
-      "hydrogen"
-    ]
-  },
-  "al(oh)3+h2so4": {
-    "reactants": [
-      "sulfuric acid",
-      "aluminum hydroxide"
-    ],
-    "temp max": 3500,
-    "temp min": 9,
-    "results": [
-      "aluminum sulfate",
-      "water",
-      "hydrogen peroxide"
-    ]
-  },
-  "al+h2o2": {
-    "reactants": [
-      "hydrogen peroxide",
-      "aluminum"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "aluminum oxide",
-      "water"
-    ]
-  },
-  "al2(so4)3": {
-    "reactants": [
-      "aluminum sulfate"
-    ],
-    "temp max": 3500,
-    "temp min": 800,
-    "results": [
-      "aluminum",
-      "sulfuric acid"
-    ]
-  },
-  "al+o2": {
-    "reactants": [
-      "aluminum",
-      "aluminum",
-      "oxygen"
-    ],
-    "temp max": 1070,
-    "temp min": 999,
-    "results": [
-      "aluminum oxide"
-    ]
-  },
-  "o2+f2": {
-    "reactants": [
-      "oxygen",
-      "fluorine",
-      "fluorine"
-    ],
-    "temp max": 3500,
-    "temp min": -221,
-    "results": [
-      "oxygen difluoride"
-    ]
-  },
-  "f2+h2o": {
-    "reactants": [
-      "water",
-      "fluorine"
-    ],
-    "temp max": 3500,
-    "temp min": -1,
-    "results": [
-      "hydrofluoric acid",
-      "hydrofluoric acid",
-      "oxygen"
-    ]
-  },
-  "li+f2": {
-    "reactants": [
-      "lithium",
-      "lithium",
-      "fluorine"
-    ],
-    "temp max": 3500,
-    "temp min": -220,
-    "results": [
-      "lithium fluoride",
-      "lithium fluoride"
-    ]
-  },
-  "li+hf": {
-    "reactants": [
-      "lithium",
-      "hydrofluoric acid"
-    ],
-    "temp max": 3500,
-    "temp min": -84,
-    "results": [
-      "lithium fluoride"
-    ]
-  },
-  "of2+h2o": {
-    "reactants": [
-      "oxygen difluoride",
-      "water"
-    ],
-    "temp max": 3500,
-    "temp min": -218,
-    "results": [
-      "oxygen",
-      "hydrofluoric acid",
-      "hydrofluoric acid"
-    ]
-  },
-  "h2o2+hf": {
-    "reactants": [
-      "hydrogen peroxide",
-      "hydrofluoric acid",
-      "hydrofluoric acid"
-    ],
-    "temp max": 3500,
-    "temp min": -220,
-    "results": [
-      "oxygen difluoride",
-      "water"
-    ]
-  },
-  "h2+li": {
-    "reactants": [
-      "hydrogen",
-      "lithium",
-      "lithium"
-    ],
-    "temp max": 2000,
-    "temp min": 499,
-    "results": [
-      "lithium hydride",
-      "lithium hydride"
-    ]
-  },
-  "n2+f2": {
-    "reactants": [
-      "nitrogen",
-      "fluorine",
-      "fluorine",
-      "fluorine"
-    ],
-    "temp max": 3500,
-    "temp min": -220,
-    "results": [
-      "nitrogen trifluoride",
-      "nitrogen trifluoride"
-    ]
-  }
+    "(nh3)2so4": {
+        "reactants": [
+            "ammonium sulfate"
+        ],
+        "temp max": 3500,
+        "temp min": 250,
+        "results": [
+            "sulfur dioxide",
+            "ammonia",
+            "oxygen"
+        ]
+    },
+    "h2o2": {
+        "reactants": [
+            "hydrogen peroxide"
+        ],
+        "temp max": 3500,
+        "temp min": 160,
+        "results": [
+            "water",
+            "oxygen"
+        ]
+    },
+    "he2": {
+        "reactants": [
+            "dihelium"
+        ],
+        "temp max": 3500,
+        "temp min": -250,
+        "results": [
+            "helium",
+            "helium"
+        ]
+    },
+    "nh3oh": {
+        "reactants": [
+            "ammonium hydroxide"
+        ],
+        "temp max": 3500,
+        "temp min": 37,
+        "results": [
+            "water",
+            "ammonia"
+        ]
+    },
+    "h2+o2": {
+        "reactants": [
+            "oxygen",
+            "hydrogen",
+            "hydrogen"
+        ],
+        "temp max": 1070,
+        "temp min": 999,
+        "results": [
+            "water"
+        ]
+    },
+    "hcl+nh3oh": {
+        "reactants": [
+            "hydrochloric acid",
+            "ammonium hydroxide"
+        ],
+        "temp max": 3500,
+        "temp min": -43,
+        "results": [
+            "ammonium chloride",
+            "water"
+        ]
+    },
+    "h2so4+nh3oh": {
+        "reactants": [
+            "sulfuric acid",
+            "ammonium hydroxide"
+        ],
+        "temp max": 3500,
+        "temp min": -43,
+        "results": [
+            "ammonium sulfate",
+            "water"
+        ]
+    },
+    "s+o2": {
+        "reactants": [
+            "sulfur",
+            "oxygen"
+        ],
+        "temp max": 1070,
+        "temp min": 999,
+        "results": [
+            "sulfur dioxide"
+        ]
+    },
+    "so2+h2o": {
+        "reactants": [
+            "sulfur dioxide",
+            "water"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "sulfuric acid"
+        ]
+    },
+    "h2so4+nh3cl": {
+        "reactants": [
+            "sulfuric acid",
+            "ammonium chloride",
+            "ammonium chloride"
+        ],
+        "temp max": 3500,
+        "temp min": -43,
+        "results": [
+            "ammonium sulfate",
+            "chlorine"
+        ]
+    },
+    "h2so4+nh3": {
+        "reactants": [
+            "sulfuric acid",
+            "ammonia",
+            "ammonia"
+        ],
+        "temp max": 3500,
+        "temp min": -43,
+        "results": [
+            "ammonium sulfate",
+            "hydrogen"
+        ]
+    },
+    "cloh+nh3oh": {
+        "reactants": [
+            "hypochlorous acid",
+            "ammonium hydroxide"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "chloramine",
+            "hydrogen peroxide"
+        ]
+    },
+    "cloh+nh3": {
+        "reactants": [
+            "hypochlorous acid",
+            "ammonia"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "chloramine",
+            "water"
+        ]
+    },
+    "hcl+nh3": {
+        "reactants": [
+            "hydrochloric acid",
+            "ammonia"
+        ],
+        "temp max": 3500,
+        "temp min": -43,
+        "results": [
+            "ammonium chloride"
+        ]
+    },
+    "o2+o2": {
+        "reactants": [
+            "oxygen",
+            "oxygen"
+        ],
+        "temp max": 1070,
+        "temp min": 999,
+        "results": [
+            "ozone"
+        ]
+    },
+    "he+he": {
+        "reactants": [
+            "helium",
+            "helium"
+        ],
+        "temp max": -250,
+        "temp min": -273,
+        "results": [
+            "dihelium"
+        ]
+    },
+    "o3+h2": {
+        "reactants": [
+            "ozone",
+            "hydrogen"
+        ],
+        "temp max": 159,
+        "temp min": 149,
+        "results": [
+            "water",
+            "oxygen"
+        ]
+    },
+    "n2+h2": {
+        "reactants": [
+            "hydrogen",
+            "hydrogen",
+            "nitrogen"
+        ],
+        "temp max": 3500,
+        "temp min": 449,
+        "results": [
+            "ammonia"
+        ]
+    },
+    "o3+h2o": {
+        "reactants": [
+            "ozone",
+            "water"
+        ],
+        "temp max": 3500,
+        "temp min": 99,
+        "results": [
+            "hydrogen peroxide",
+            "oxygen"
+        ]
+    },
+    "cl2+h2o": {
+        "reactants": [
+            "chlorine",
+            "water"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "hypochlorous acid",
+            "hydrochloric acid"
+        ]
+    },
+    "cl2+h2o2": {
+        "reactants": [
+            "chlorine",
+            "hydrogen peroxide"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "hypochlorous acid",
+            "hypochlorous acid"
+        ]
+    },
+    "nh3+h2o": {
+        "reactants": [
+            "water",
+            "ammonia"
+        ],
+        "temp max": 37,
+        "temp min": -273,
+        "results": [
+            "ammonium hydroxide",
+            "water"
+        ]
+    },
+    "al+hcl": {
+        "reactants": [
+            "hydrochloric acid",
+            "hydrochloric acid",
+            "hydrochloric acid",
+            "aluminum"
+        ],
+        "temp max": 3500,
+        "temp min": -44,
+        "results": [
+            "aluminum chloride",
+            "hydrogen"
+        ]
+    },
+    "al(cl)3+h2o": {
+        "reactants": [
+            "water",
+            "water",
+            "water",
+            "aluminum chloride"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "aluminum hydroxide",
+            "hydrogen"
+        ]
+    },
+    "al(oh)3+h2so4": {
+        "reactants": [
+            "sulfuric acid",
+            "aluminum hydroxide"
+        ],
+        "temp max": 3500,
+        "temp min": 9,
+        "results": [
+            "aluminum sulfate",
+            "water",
+            "hydrogen peroxide"
+        ]
+    },
+    "al+h2o2": {
+        "reactants": [
+            "hydrogen peroxide",
+            "aluminum"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "aluminum oxide",
+            "water"
+        ]
+    },
+    "al2(so4)3": {
+        "reactants": [
+            "aluminum sulfate"
+        ],
+        "temp max": 3500,
+        "temp min": 800,
+        "results": [
+            "aluminum",
+            "sulfuric acid"
+        ]
+    },
+    "al+o2": {
+        "reactants": [
+            "aluminum",
+            "aluminum",
+            "oxygen"
+        ],
+        "temp max": 1070,
+        "temp min": 999,
+        "results": [
+            "aluminum oxide"
+        ]
+    },
+    "o2+f2": {
+        "reactants": [
+            "oxygen",
+            "fluorine",
+            "fluorine"
+        ],
+        "temp max": 3500,
+        "temp min": -221,
+        "results": [
+            "oxygen difluoride"
+        ]
+    },
+    "f2+h2o": {
+        "reactants": [
+            "water",
+            "fluorine"
+        ],
+        "temp max": 3500,
+        "temp min": -1,
+        "results": [
+            "hydrofluoric acid",
+            "hydrofluoric acid",
+            "oxygen"
+        ]
+    },
+    "li+f2": {
+        "reactants": [
+            "lithium",
+            "lithium",
+            "fluorine"
+        ],
+        "temp max": 3500,
+        "temp min": -220,
+        "results": [
+            "lithium fluoride",
+            "lithium fluoride"
+        ]
+    },
+    "li+hf": {
+        "reactants": [
+            "lithium",
+            "hydrofluoric acid"
+        ],
+        "temp max": 3500,
+        "temp min": -84,
+        "results": [
+            "lithium fluoride"
+        ]
+    },
+    "of2+h2o": {
+        "reactants": [
+            "oxygen difluoride",
+            "water"
+        ],
+        "temp max": 3500,
+        "temp min": -218,
+        "results": [
+            "oxygen",
+            "hydrofluoric acid",
+            "hydrofluoric acid"
+        ]
+    },
+    "h2o2+hf": {
+        "reactants": [
+            "hydrogen peroxide",
+            "hydrofluoric acid",
+            "hydrofluoric acid"
+        ],
+        "temp max": 3500,
+        "temp min": -220,
+        "results": [
+            "oxygen difluoride",
+            "water"
+        ]
+    },
+    "h2+li": {
+        "reactants": [
+            "hydrogen",
+            "lithium",
+            "lithium"
+        ],
+        "temp max": 2000,
+        "temp min": 499,
+        "results": [
+            "lithium hydride",
+            "lithium hydride"
+        ]
+    },
+    "n2+f2": {
+        "reactants": [
+            "nitrogen",
+            "fluorine",
+            "fluorine",
+            "fluorine"
+        ],
+        "temp max": 3500,
+        "temp min": -220,
+        "results": [
+            "nitrogen trifluoride",
+            "nitrogen trifluoride"
+        ]
+    }
 }
