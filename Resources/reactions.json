@@ -389,6 +389,19 @@
         "nitrogen trifluoride",
         "nitrogen trifluoride"
       ]
+    },
+	"nclh3+hf": {
+      "reactants": [
+        "chloramine",
+        "hydrofluoric acid"
+      ],
+      "temp max": 3500,
+      "temp min": -1,
+      "results": [
+        "ammonia",
+        "fluorine",
+		"chlorine"
+      ]
     }
   },
   "sparks": {

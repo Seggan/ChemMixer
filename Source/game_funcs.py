@@ -61,17 +61,20 @@ def sublist(child, parent):
     return True
 
 
-class Beaker():
+class Beaker:
     """A class to represent a beaker"""
 
     def __init__(self, chemdict):
         from json import load
         self.dc = [chem for chem in chemdict.keys() if chemdict[chem]["element"]]
         self.contents = list()
+        self.previous_contents = self.contents
         with open("Resources/reactions.json", 'r') as r:
             reacts = load(r)
             self.reactions = reacts["reactions"]
             self.sparks = reacts["sparks"]
+        with open("logs.txt", 'w') as f:
+            pass
         self.cont = False
 
     def add(self, chem):
@@ -104,6 +107,11 @@ class Beaker():
                         chemdict[chemical]["state"] = "liquid"
                     if temp >= chemdict[chemical]["boiling_point"]:
                         chemdict[chemical]["state"] = "gaseous"
+        if self.previous_contents != self.contents:
+            log = self.contents
+            self.previous_contents = self.contents
+            with open("logs.txt", 'a') as f:
+                f.write(log)
 
     def spark(self, temp):
         for a in self.sparks.keys():
