@@ -1,0 +1,37 @@
+{
+	"alum": {
+        "melting_point": 93,
+        "boiling_point": 120,
+        "state": "solid",
+        "element": false,
+		"parent":"sulfates"
+    },
+	"carbon": {
+        "melting_point": 3550,
+        "boiling_point": 4827,
+        "state": "solid",
+	    "element": true,
+		"parent":"elements"
+    },
+	"lithium carbonate": {
+        "melting_point": 723,
+        "boiling_point": 1310,
+        "state": "liquid",
+	    "element": false,
+		"parent":"carbonates"
+    },
+	"aluminum nitride": {
+        "melting_point": 2200,
+        "boiling_point": 2517,
+        "state": "solid",
+        "element": false,
+		"parent":"nitrides"
+    },
+    "lithium chloride": {
+        "melting_point": 605,
+        "boiling_point": 1382,
+        "state": "liquid",
+	    "element": false,
+		"parent":"chlorides"
+    }
+}
