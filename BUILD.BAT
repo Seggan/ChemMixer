@@ -1,2 +1,0 @@
-tcc main.c
-pause
