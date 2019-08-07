@@ -1,8 +1,8 @@
-from game_funcs import *
-from tkinter import *
-from json import load
 import os
-import sys
+from json import load
+from tkinter import *
+
+from game_funcs import *
 
 
 class Tutorial:
@@ -64,10 +64,10 @@ class GUI:
         """Creates all the widgets for the window"""
         self.img = PhotoImage(master=root, file="Resources/Logo.png")
         self.imglbl = Label(self.master, image=self.img)
-        self.imglbl.pack(side=LEFT)
+        self.imglbl.pack(side=LEFT, expand=YES)
 
         self.imglbl2 = Label(self.master, image=self.img)
-        self.imglbl2.pack(side=RIGHT)
+        self.imglbl2.pack(side=RIGHT, expand=YES)
 
         self.menubar = Menu(self.master)
 
@@ -90,8 +90,7 @@ class GUI:
 
         self.text = beaker.show_contents(temp, chem)
         self.contents = Label(self.master, text=self.text)
-        self.contents.pack(side=TOP)
-
+        # , font=("Sans-Serif", 23)
         self.remove = Menu(self.menubar)
         self.menubar.add_cascade(label="Remove", menu=self.remove)
 
@@ -126,12 +125,12 @@ class GUI:
         self.text = beaker.show_contents(temp, chem)
         self.contents.config(text=self.text)
         self.contents.pack(side=TOP)
-        self.remove.delete(0, 'end')
         self.cmds_in_remove = beaker.contents
+        self.remove.delete(0, 'end')
         for chem in self.cmds_in_remove:
             self.remove.add_command(label=chem, command=lambda n=chem: beaker.extract(n))
-        self.imglbl.pack(side=LEFT)
-        self.imglbl2.pack(side=RIGHT)
+        self.imglbl.pack(side=LEFT, expand=YES)
+        self.imglbl2.pack(side=RIGHT, expand=YES)
 
     def credits(self):
         """Creates the credits window"""
@@ -140,7 +139,8 @@ class GUI:
         self.credit_text = Label(self.creds, text='''
 Idea based on: BEAKER, by THIX; CHEMIST, by THIX
 Programmers: Daniel K., Super Leaf 1995
-Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality, Droseraman, Super Leaf 1995
+Testers: Lianna K., Irina K., Daniel K., Drew Drew us, 
+Alir001, cyanidesDuality, Droseraman, Super Leaf 1995, Artem P.
 ''')
         self.credit_text.pack()
 
@@ -205,6 +205,7 @@ Testers: Lianna K., Irina K., Daniel K., Drew Drew us, Alir001, cyanidesDuality,
 with open("Resources/chemicals.json", 'r') as r:
     chemdict = load(r)
 temperature = 20
+DEBUG = True
 # The beaker
 beaker = Beaker(chemdict)
 tutwin = Tk()
@@ -223,7 +224,7 @@ while True:
         if str(e) == 'invalid command name ".!label3"':
             sys.exit()
         else:
-            root.destroy()
-            print("Error:", e)
-            while True:
-                pass
+            if DEBUG:
+                raise
+            else:
+                print(e.__name__, str(e))
