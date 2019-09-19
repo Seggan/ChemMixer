@@ -390,7 +390,7 @@
         "nitrogen trifluoride"
       ]
     },
-	"nclh3+hf": {
+    "nclh3+hf": {
       "reactants": [
         "chloramine",
         "hydrofluoric acid"
@@ -400,7 +400,174 @@
       "results": [
         "ammonia",
         "fluorine",
-		"chlorine"
+        "chlorine"
+      ]
+    },
+    "catalase+h2o2": {
+      "reactants": [
+        "catalase",
+        "water",
+        "hydrogen peroxide"
+      ],
+      "temp max": 100,
+      "temp min": -1,
+      "results": [
+        "catalase",
+        "water",
+        "water",
+        "oxygen"
+      ]
+    },
+    "hydrogenase+water": {
+      "reactants": [
+        "hydrogenase",
+        "water",
+        "water"
+      ],
+      "temp max": 100,
+      "temp min": -1,
+      "results": [
+        "hydrogenase",
+        "water",
+        "hydrogen",
+        "oxygen"
+      ]
+    },
+    "nitrogenase+water": {
+      "reactants": [
+        "nitrogenase",
+        "water",
+        "hydrogen",
+        "hydrogen",
+        "nitrogen"
+      ],
+      "temp max": 100,
+      "temp min": -1,
+      "results": [
+        "nitrogenase",
+        "water",
+        "ammonia"
+      ]
+    },
+    "no+2o2": {
+      "reactants": [
+        "nitric oxide",
+        "nitric oxide",
+        "oxygen"
+      ],
+      "temp max": 4000,
+      "temp min": -165,
+      "results": [
+        "nitrogen dioxide",
+        "nitrogen dioxide"
+      ]
+    },
+    "no+o3": {
+      "reactants": [
+        "nitric oxide",
+        "ozone"
+      ],
+      "temp max": 4000,
+      "temp min": -165,
+      "results": [
+        "nitrogen dioxide",
+        "oxygen"
+      ]
+    },
+    "no+h2o2": {
+      "reactants": [
+        "nitric oxide",
+        "hydrogen peroxide"
+      ],
+      "temp max": 4000,
+      "temp min": -1,
+      "results": [
+        "nitrogen dioxide",
+        "water"
+      ]
+    },
+    "he+h": {
+      "reactants": [
+        "helium",
+        "hydrogen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "lithium"
+      ]
+    },
+    "li+li": {
+      "reactants": [
+        "lithium"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "oxygen"
+      ]
+    },
+    "o+h": {
+      "reactants": [
+        "hydrogen",
+        "oxygen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "nitrogen"
+      ]
+    },
+    "n+o": {
+      "reactants": [
+        "oxygen",
+        "nitrogen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "aluminum"
+      ]
+    },
+    "o+o": {
+      "reactants": [
+        "oxygen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "sulfur"
+      ]
+    },
+    "n+n": {
+      "reactants": [
+        "nitrogen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "chlorine"
+      ]
+    },
+    "s+h": {
+      "reactants": [
+        "sulfur",
+        "hydrogen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "chlorine"
+      ]
+    },
+    "h+h": {
+      "reactants": [
+        "hydrogen"
+      ],
+      "temp max": 3500,
+      "temp min": 3499,
+      "results": [
+        "helium"
       ]
     }
   },
@@ -450,6 +617,27 @@
       ],
       "results": [
         "hydrogen peroxide"
+      ]
+    },
+    "n2+o2": {
+      "reactants": [
+        "nitrogen",
+        "oxygen"
+      ],
+      "results": [
+        "nitric oxide",
+        "nitric oxide"
+      ]
+    },
+    "n2+2o2": {
+      "reactants": [
+        "oxygen",
+        "oxygen",
+        "nitrogen"
+      ],
+      "results": [
+        "nitrogen dioxide",
+        "nitrogen dioxide"
       ]
     }
   }
