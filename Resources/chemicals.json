@@ -47,6 +47,22 @@
     "parent": "elements",
     "soluble": true
   },
+  "nitric oxide": {
+    "melting_point": -164,
+    "boiling_point": -152,
+    "state": "gaseous",
+    "element": false,
+    "parent": "oxides",
+    "soluble": false
+  },
+  "nitrogen dioxide": {
+    "melting_point": -9,
+    "boiling_point": 21,
+    "state": "gaseous",
+    "element": false,
+    "parent": "oxides",
+    "soluble": false
+  },
   "ammonia": {
     "melting_point": -78,
     "boiling_point": -33,
@@ -254,5 +270,29 @@
     "element": false,
     "parent": "uncategorized",
     "soluble": false
+  },
+  "catalase": {
+    "melting_point": 4000,
+    "boiling_point": 4001,
+    "state": "solid",
+    "element": false,
+    "parent": "enzymes",
+    "soluble": true
+  },
+  "hydrogenase": {
+    "melting_point": 4000,
+    "boiling_point": 4001,
+    "state": "solid",
+    "element": false,
+    "parent": "enzymes",
+    "soluble": true
+  },
+  "nitrogenase": {
+    "melting_point": 4000,
+    "boiling_point": 4001,
+    "state": "solid",
+    "element": false,
+    "parent": "enzymes",
+    "soluble": true
   }
 }
