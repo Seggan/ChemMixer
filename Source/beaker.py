@@ -5,24 +5,44 @@ messages = [
     Press \"Next >\" to get started.''',
 
     '''Adding Chemicals:
-To add chemicals, go to the main menu, go to
-the "Add" menu, then go to the desired family 
-of chemicals, then finally choose the chemical 
-you want.''',
+To add chemicals go to the "Add" menu, then go 
+to the desired family of chemicals, then finally 
+choose the chemical you want.''',
 
     '''Removing Chemicals:
-To remove a chemical go to the remove menu and 
+To remove a chemical go to the "Remove" menu and 
 then select the chemical you want to remove.''',
 
     '''Changing the Temperature:
-To change the temperature go to the top menu and 
-select the "Change temperature" option, then input 
+To change the temperature go to the "Tools" menu and 
+select the "Heater" option, then input 
 the desired temperature in degrees Celsius.''',
+
     '''Sparking:
-To spark, to to the "Other Commands" menu and 
-select  "Spark". This is the only way to oxidize 
+To spark, to to the "Tools" menu and 
+select "Electrodes". This is the only way to oxidize 
 stuff. Sparking does not work in temperatures > 
 10\u00b0 Celsius.''',
+
+    '''Switching Beakers:
+To switch beakers, to to the "Beaker Settings" menu and 
+select "Switch Beakers".''',
+
+    '''Transferring Beaker Contents:
+To transfer beaker contents, to to the "Beaker Settings" 
+menu and select "Add Contents of the Other Beaker". This 
+will add the contents of the other beaker to the current 
+beaker.''',
+
+    '''Other Tools:
+Filter: Transfers the liquid contents of the beaker to the 
+second beaker.
+
+Evaporator: Evaporates all the water in the current beaker.
+
+Stopper: Opening the stopper releases all the gases from 
+the current beaker.''',
+
     '''Sample Reactions:
 Reactant(s): 2 moles of hydrogen, 1 mole of oxygen
 Requirements: A spark
@@ -66,6 +86,7 @@ class Beaker:
 
     def __init__(self, chemlist):
         from json import load
+        self.temperature = 20
         self.chemlist = chemlist
         self.dc = [chem for chem in chemlist if chem.element]
         self.contents = list()
@@ -96,33 +117,33 @@ class Beaker:
         """Empties the beaker"""
         self.contents = list()
 
-    def react(self, temp):
+    def react(self):
         """Checks for reactions and if there are any, reacts them"""
         self.state_changed = False
         for a in self.reactions.keys():
             if sublist(self.reactions[a]["reactants"], [n.name for n in self.contents]) and (
-                    self.reactions[a]["temp min"] < temp <= self.reactions[a]["temp max"]):
+                    self.reactions[a]["temp min"] < self.temperature <= self.reactions[a]["temp max"]):
                 for c in self.reactions[a]["reactants"]:
                     self.extract(c)
                 for d in self.reactions[a]["results"]:
                     self.add(d)
         for chemical in self.contents:
-            chemical.change_states(temp, bool(chemical.soluble and in_beaker("water", self.contents)))
+            chemical.change_states(self.temperature, bool(chemical.soluble and in_beaker("water", self.contents)))
 
-    def spark(self, temp):
+    def spark(self):
         self.state_changed = True
         for a in self.sparks.keys():
-            if sublist(self.sparks[a]["reactants"], [n.name for n in self.contents]) and temp > 9:
+            if sublist(self.sparks[a]["reactants"], [n.name for n in self.contents]) and self.temperature > 9:
                 for c in self.sparks[a]["reactants"]:
                     self.extract(c)
                 for d in self.sparks[a]["results"]:
                     self.add(d)
 
-    def show_contents(self, temp):
+    def show_contents(self, current_beaker):
         """Shows the contents of the beaker"""
         accounted = list()
         solution = False
-        txt = "Your beaker is at " + str(temp) + ''' degrees Celsius and has the
+        txt = f'''Beaker {current_beaker} is at {str(self.temperature)} degrees Celsius and has the
 following chemicals inside:'''
         for chemical in self.contents:
             if chemical.state == "aqueous":
@@ -135,9 +156,9 @@ following chemicals inside:'''
                 else:
                     mole = ' moles of '
                 if chemical.name == "water" and not solution:
-                    txt += '\n' + str(count) + mole + chemical.state + ' ' + chemical.name
+                    txt += f"\n {str(count)}{mole}{chemical.state} {chemical.name}"
                 if chemical.name != "water":
-                    txt += '\n' + str(count) + mole + chemical.state + ' ' + chemical.name
+                    txt += f"\n {str(count)}{mole}{chemical.state} {chemical.name}"
                 accounted.append(chemical)
         return txt
 
@@ -147,3 +168,14 @@ following chemicals inside:'''
             reacts = load(r)
             self.reactions = reacts["reactions"]
             self.sparks = reacts["sparks"]
+
+    def evaporate(self):
+        if in_beaker("water", self.contents):
+            for n in range(0, [n.name for n in self.contents].count("water")):
+                self.extract("water")
+
+    def remove_stopper(self):
+        for n in range(0, len(self.contents)):
+            for m in self.contents:
+                if m.state == "gaseous":
+                    self.extract(m.name)

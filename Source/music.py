@@ -14,4 +14,4 @@ class MusicThread(multiprocessing.Process):
 
     def run(self):
         while True:
-            playsound("Resources/" + self.song + ".wav")
+            playsound("Resources/" + self.song + ".mp3")
